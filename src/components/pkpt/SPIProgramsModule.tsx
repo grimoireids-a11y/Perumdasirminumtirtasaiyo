@@ -128,7 +128,7 @@ export const SPIProgramsModule: React.FC = () => {
             Program Kerja Tahunan Kapabilitas SPI (Non-Audit)
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Penyusunan Audit Charter, sertifikasi kompetensi auditor, sosialisasi GCG, reviu SOP, dan koordinasi pengawasan BPKP
+            Penyusunan Audit Charter, sertifikasi kompetensi auditor, sosialisasi GCG, reviu SOP, dan koordinasi stakeholder pengawasan
           </p>
         </div>
 

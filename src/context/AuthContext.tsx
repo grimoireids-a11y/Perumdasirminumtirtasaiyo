@@ -12,6 +12,7 @@ import { doc, getDoc, setDoc, updateDoc, collection, getDocs, query, where, dele
 import { auth, db, testFirestoreConnection } from '../lib/firebase';
 import { UserProfile, UserRole } from '../types/audit';
 import { INITIAL_UNITS, INITIAL_REGULATIONS, INITIAL_OFFICIALS } from '../data/initialData';
+import { setDriveAccessToken, clearDriveAccessToken } from '../lib/googleDrive';
 
 interface AuthContextType {
   currentUser: FirebaseUser | { uid: string; email: string; displayName?: string } | null;
@@ -135,7 +136,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const loginWithGoogle = async () => {
     try {
       const provider = new GoogleAuthProvider();
+      provider.addScope('https://www.googleapis.com/auth/drive.file');
       const userCred = await signInWithPopup(auth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(userCred);
+      if (credential?.accessToken) {
+        setDriveAccessToken(credential.accessToken);
+      }
       const user = userCred.user;
       setCurrentUser(user);
 
@@ -344,6 +350,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (e) {
       // ignore
     }
+    clearDriveAccessToken();
     localStorage.removeItem(LOCAL_USER_KEY);
     setCurrentUser(null);
     setUserProfile(null);

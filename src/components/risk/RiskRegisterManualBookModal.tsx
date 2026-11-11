@@ -41,11 +41,11 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
 
   const sections = [
     { id: 'bab1', title: 'Bab I: Konsep Dasar Manajemen Risiko & Peran 3 Lini' },
-    { id: 'bab2', title: 'Bab II: Kaidah Emas Perumusan Risiko (Golden Rules BPKP)' },
-    { id: 'bab3', title: 'Bab III: 8 Kategori Risiko BPKP Perumda Air Minum' },
+    { id: 'bab2', title: 'Bab II: Kaidah Emas Perumusan Risiko (Golden Rules SPIP)' },
+    { id: 'bab3', title: 'Bab III: 8 Kategori Risiko SPIP Perumda Air Minum' },
     { id: 'bab4', title: 'Bab IV: Analisis Akar Masalah 5M & 3 Dimensi Sasaran' },
     { id: 'bab5', title: 'Bab V: Skala Kriteria Matriks 5×5 (Kemungkinan & Dampak)' },
-    { id: 'bab6', title: 'Bab VI: Tingkat Selera Risiko & Matriks 5×5 BPKP' },
+    { id: 'bab6', title: 'Bab VI: Tingkat Selera Risiko & Matriks 5×5 SPIP' },
     { id: 'bab7', title: 'Bab VII: Rencana Perlakuan Risiko (Reduce/Avoid/Transfer/Accept)' },
     { id: 'bab8', title: 'Bab VIII: Panduan Langkah Demi Langkah Pengisian Form di Aplikasi' },
     { id: 'bab9', title: 'Bab IX: Studi Kasus Nyata Perumda Tirta Saiyo (Slide 13-16)' },
@@ -64,7 +64,7 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
               <div>
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wider bg-emerald-800 text-emerald-200 rounded">
-                    Pedoman Resmi BPKP & ISO 31000
+                    Pedoman Resmi SPIP & ISO 31000
                   </span>
                   <span className="text-[11px] text-emerald-300 font-mono">Ver. 2026</span>
                 </div>
@@ -143,7 +143,7 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
 
                   <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200 space-y-2">
                     <h4 className="font-bold text-emerald-950 text-xs">
-                      1. Definisi Risiko Berdasarkan ISO 31000 & Pedoman BPKP:
+                      1. Definisi Risiko Berdasarkan ISO 31000 & Pedoman SPIP:
                     </h4>
                     <p className="italic text-emerald-900">
                       "Risk is the effect of uncertainty on objectives" (Pengaruh ketidakpastian terhadap pencapaian sasaran).
@@ -200,12 +200,12 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
                       Bab II
                     </span>
                     <h3 className="text-base font-extrabold text-slate-900">
-                      Kaidah Emas Perumusan Risiko (Golden Rules BPKP Slide 13–16)
+                      Kaidah Emas Perumusan Risiko (Golden Rules SPIP)
                     </h3>
                   </div>
 
                   <p className="text-slate-700">
-                    Berdasarkan paparan evaluasi BPKP, kesalahan paling umum pada BUMD air minum adalah mencampuradukkan antara <strong>Tujuan</strong>, <strong>Peristiwa Risiko</strong>, <strong>Penyebab</strong>, dan <strong>Dampak</strong>.
+                    Berdasarkan kaidah pengawasan intern SPIP, kesalahan paling umum pada BUMD air minum adalah mencampuradukkan antara <strong>Tujuan</strong>, <strong>Peristiwa Risiko</strong>, <strong>Penyebab</strong>, dan <strong>Dampak</strong>.
                   </p>
 
                   <div className="overflow-x-auto">
@@ -213,7 +213,7 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
                       <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
                         <tr>
                           <th className="p-2.5">Elemen</th>
-                          <th className="p-2.5">Pengertian Standar BPKP</th>
+                          <th className="p-2.5">Pengertian Standar SPIP</th>
                           <th className="p-2.5">Ciri Khas Perumusan</th>
                           <th className="p-2.5">Contoh Perumusan</th>
                         </tr>
@@ -249,7 +249,7 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
 
                   <div className="p-3 bg-amber-50 rounded-lg border border-amber-200">
                     <span className="font-bold text-amber-950 block mb-1">
-                      ⚠️ Larangan Penting dalam Perumusan BPKP:
+                      ⚠️ Larangan Penting dalam Perumusan Risiko:
                     </span>
                     <ul className="list-disc list-inside text-amber-900 text-[11px] space-y-1">
                       <li><strong>Jangan menulis dampak sebagai risiko:</strong> "Pelanggan komplain" bukanlah risiko, melainkan dampak dari air mati!</li>
@@ -268,12 +268,12 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
                       Bab III
                     </span>
                     <h3 className="text-base font-extrabold text-slate-900">
-                      Taksonomi 8 Kategori Risiko BPKP Resmi (Slide 5)
+                      Taksonomi 8 Kategori Risiko SPIP Resmi
                     </h3>
                   </div>
 
                   <p className="text-slate-700">
-                    Setiap risiko yang diinput oleh unit kerja wajib diklasifikasikan ke dalam salah satu dari 8 kategori risiko resmi BPKP untuk BUMD Air Minum:
+                    Setiap risiko yang diinput oleh unit kerja wajib diklasifikasikan ke dalam salah satu dari 8 kategori risiko standar SPIP untuk BUMD Air Minum:
                   </p>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -392,7 +392,7 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
                   <div className="space-y-2">
                     <h4 className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
                       <span className="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
-                      Tabel Skala Kemungkinan (Likelihood: Nilai 1 s.d. 5) - BPKP Slide 9
+                      Tabel Skala Kemungkinan (Likelihood: Nilai 1 s.d. 5) - Standar SPIP
                     </h4>
                     <div className="overflow-x-auto">
                       <table className="w-full text-left border border-slate-200 rounded-lg">
@@ -424,7 +424,7 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
                   <div className="space-y-2 pt-3">
                     <h4 className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
                       <span className="w-2.5 h-2.5 rounded-full bg-rose-600"></span>
-                      Tabel Skala Dampak (Impact: Nilai 1 s.d. 5) - BPKP Slide 9
+                      Tabel Skala Dampak (Impact: Nilai 1 s.d. 5) - Standar SPIP
                     </h4>
                     <div className="overflow-x-auto">
                       <table className="w-full text-left border border-slate-200 rounded-lg">
@@ -464,7 +464,7 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
                       Bab VI
                     </span>
                     <h3 className="text-base font-extrabold text-slate-900">
-                      Tingkat Selera Risiko & Matriks 5×5 BPKP (Slide 9 & 11)
+                      Tingkat Selera Risiko & Matriks 5×5 SPIP
                     </h3>
                   </div>
 
@@ -535,12 +535,12 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
                       Bab VII
                     </span>
                     <h3 className="text-base font-extrabold text-slate-900">
-                      Rencana Perlakuan Risiko (Risk Treatment Options) - BPKP Slide 11
+                      Rencana Perlakuan Risiko (Risk Treatment Options) - Standar SPIP
                     </h3>
                   </div>
 
                   <p className="text-slate-700">
-                    Sesuai kaidah BPKP, unit kerja wajib memilih salah satu dari 4 opsi strategi perlakuan risiko:
+                    Sesuai kaidah SPIP, unit kerja wajib memilih salah satu dari 4 opsi strategi perlakuan risiko:
                   </p>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -665,9 +665,9 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
                         4
                       </span>
                       <div className="space-y-1">
-                        <strong className="text-slate-900 text-xs">Pilih Kategori BPKP, Akar Masalah 5M, & 3 Dimensi</strong>
+                        <strong className="text-slate-900 text-xs">Pilih Kategori SPIP, Akar Masalah 5M, & 3 Dimensi</strong>
                         <p className="text-[11px] text-slate-600">
-                          Pilih salah satu dari 8 Kategori Risiko BPKP, tentukan akar penyebab 5M (Man/Money/Material/Machine/Methode), dan pilih dimensi sasarannya.
+                          Pilih salah satu dari 8 Kategori Risiko SPIP, tentukan akar penyebab 5M (Man/Money/Material/Machine/Methode), dan pilih dimensi sasarannya.
                         </p>
                       </div>
                     </div>
@@ -691,7 +691,7 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
                       <div className="space-y-1">
                         <strong className="text-slate-900 text-xs">Skoring Kemungkinan & Dampak (Inheren & Residual)</strong>
                         <p className="text-[11px] text-slate-600">
-                          Pilih nilai Kemungkinan (1–5) dan Dampak (1–5). Sistem akan secara otomatis menghitung nilai perkalian skor (1–25) beserta kategori selera risiko BPKP.
+                          Pilih nilai Kemungkinan (1–5) dan Dampak (1–5). Sistem akan secara otomatis menghitung nilai perkalian skor (1–25) beserta kategori selera risiko SPIP.
                         </p>
                       </div>
                     </div>
@@ -731,12 +731,12 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
                       Bab IX
                     </span>
                     <h3 className="text-base font-extrabold text-slate-900">
-                      Studi Kasus Pembelajaran Nyata Perumda Air Minum (Slide 13–16 BPKP)
+                      Studi Kasus Pembelajaran Nyata Perumda Air Minum
                     </h3>
                   </div>
 
                   <p className="text-slate-700">
-                    Pelajari dua studi kasus nyata dari BPKP berikut sebagai panduan perbandingan praktis dalam membedakan perumusan yang salah dan yang benar:
+                    Pelajari dua studi kasus nyata standar SPIP berikut sebagai panduan perbandingan praktis dalam membedakan perumusan yang salah dan yang benar:
                   </p>
 
                   <div className="space-y-4">
@@ -799,7 +799,7 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
         isOpen={isPrintModalOpen}
         onClose={() => setIsPrintModalOpen(false)}
         documentTitle="BUKU PANDUAN TEKNIS (MANUAL BOOK) PENGISIAN REGISTER RISIKO KORPORAT (MATRIKS 5×5)"
-        documentSubtitle="STANDAR PENGENDALIAN INTERN & MANAJEMEN RISIKO BPKP - PERUMDA AIR MINUM TIRTA SAIYO"
+        documentSubtitle="STANDAR PENGENDALIAN INTERN & MANAJEMEN RISIKO SPIP - PERUMDA AIR MINUM TIRTA SAIYO"
         documentNumber="MANUAL/SPI-MR/2026/01"
         initialSignatory1Role="Kepala Satuan Pengawasan Intern"
         initialSignatory2Role="Direktur Perumda Air Minum Tirta Saiyo"
@@ -816,7 +816,7 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
                 PEDOMAN TEKNIS UNIT KERJA (AUDITEE) & EVALUATOR SATUAN PENGAWASAN INTERN (SPI)
               </p>
               <p className="text-[11px] text-slate-600">
-                Mengacu pada Pedoman Evaluasi Manajemen Risiko BPKP RI & Standar ISO 31000
+                Mengacu pada Pedoman Evaluasi Manajemen Risiko SPIP & Standar ISO 31000
               </p>
             </div>
 
@@ -826,7 +826,7 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
                 BAB I. DEFINISI & PRINSIP TIGA LINI PERTAHANAN (THREE LINES MODEL)
               </h3>
               <p className="text-justify text-[11px]">
-                Berdasarkan ISO 31000 dan Pedoman BPKP, risiko didefinisikan sebagai <em>"the effect of uncertainty on objectives"</em> (pengaruh ketidakpastian terhadap pencapaian sasaran perusahaan). Dalam tata kelola Perumda Air Minum Tirta Saiyo Kabupaten Pasaman, pengelolaan risiko menerapkan prinsip Tiga Lini Pertahanan:
+                Berdasarkan ISO 31000 dan Pedoman SPIP, risiko didefinisikan sebagai <em>"the effect of uncertainty on objectives"</em> (pengaruh ketidakpastian terhadap pencapaian sasaran perusahaan). Dalam tata kelola Perumda Air Minum Tirta Saiyo Kabupaten Pasaman, pengelolaan risiko menerapkan prinsip Tiga Lini Pertahanan:
               </p>
               <ol className="list-decimal list-inside space-y-1 pl-2 text-[11px]">
                 <li><strong>Lini Pertama (Auditee / Risk Owner):</strong> Kepala Bagian, Kepala Sub Bagian, dan Kepala Unit Cabang bertanggung jawab penuh mengidentifikasi, mengukur, dan mengendalikan risiko operasional harian di unitnya.</li>
@@ -838,7 +838,7 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
             {/* BAB 2 Print */}
             <div className="space-y-2">
               <h3 className="font-black text-xs text-slate-900 border-b border-slate-300 pb-1 uppercase">
-                BAB II. KAIDAH EMAS PERUMUSAN RISIKO BPKP (GOLDEN RULES)
+                BAB II. KAIDAH EMAS PERUMUSAN RISIKO SPIP (GOLDEN RULES)
               </h3>
               <p className="text-justify text-[11px]">
                 Setiap penyusun register risiko wajib memisahkan secara tegas 4 elemen utama tanpa mencampuradukkannya:
@@ -848,7 +848,7 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
                   <tr className="bg-slate-100 border-b border-slate-400">
                     <th className="border border-slate-300 p-1.5 text-center w-8">No</th>
                     <th className="border border-slate-300 p-1.5">Elemen</th>
-                    <th className="border border-slate-300 p-1.5">Kaidah Perumusan BPKP</th>
+                    <th className="border border-slate-300 p-1.5">Kaidah Perumusan SPIP</th>
                     <th className="border border-slate-300 p-1.5">Contoh Rumusan yang Benar</th>
                   </tr>
                 </thead>
@@ -884,10 +884,10 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
             {/* BAB 3 & 4 Print */}
             <div className="space-y-2">
               <h3 className="font-black text-xs text-slate-900 border-b border-slate-300 pb-1 uppercase">
-                BAB III. 8 KATEGORI RISIKO RESMI BPKP & KERANGKA AKAR MASALAH 5M
+                BAB III. 8 KATEGORI RISIKO RESMI SPIP & KERANGKA AKAR MASALAH 5M
               </h3>
               <p className="text-[11px]">
-                <strong>8 Kategori Risiko BPKP:</strong> (1) Risiko Penerimaan, (2) Risiko Belanja, (3) Risiko Pembiayaan, (4) Risiko Strategis, (5) Risiko Fraud / Kecurangan, (6) Risiko Kepatuhan, (7) Risiko Operasional, dan (8) Risiko Reputasi.
+                <strong>8 Kategori Risiko SPIP:</strong> (1) Risiko Penerimaan, (2) Risiko Belanja, (3) Risiko Pembiayaan, (4) Risiko Strategis, (5) Risiko Fraud / Kecurangan, (6) Risiko Kepatuhan, (7) Risiko Operasional, dan (8) Risiko Reputasi.
               </p>
               <p className="text-[11px]">
                 <strong>Kerangka Akar Masalah 5M:</strong> MAN (kompetensi/disiplin SDM), MONEY (anggaran/dana operasional), MATERIAL (kualitas pipa/bahan kimia koagulan), MACHINE (peralatan pompa/genset/reservoir), dan METHODE (SOP/regulasi operasional).
@@ -897,10 +897,10 @@ export const RiskRegisterManualBookModal: React.FC<RiskRegisterManualBookModalPr
             {/* BAB 5 & 6 Print */}
             <div className="space-y-2">
               <h3 className="font-black text-xs text-slate-900 border-b border-slate-300 pb-1 uppercase">
-                BAB IV. SKALA MATRIKS 5×5 & 5 TINGKAT SELERA RISIKO BPKP
+                BAB IV. SKALA MATRIKS 5×5 & 5 TINGKAT SELERA RISIKO SPIP
               </h3>
               <p className="text-[11px]">
-                Besaran risiko dihitung dengan rumus: <strong>Skor = Kemungkinan (1–5) × Dampak (1–5)</strong>. Nilai dikelompokkan ke dalam 5 tingkatan selera risiko standar BPKP:
+                Besaran risiko dihitung dengan rumus: <strong>Skor = Kemungkinan (1–5) × Dampak (1–5)</strong>. Nilai dikelompokkan ke dalam 5 tingkatan selera risiko standar SPIP:
               </p>
               <div className="grid grid-cols-5 gap-2 text-center text-[10.5px]">
                 <div className="border border-rose-600 bg-rose-50 p-2 rounded">

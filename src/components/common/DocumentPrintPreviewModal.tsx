@@ -14,6 +14,7 @@ import {
   Sliders,
   Shield,
   Building,
+  ShieldCheck,
 } from 'lucide-react';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
@@ -59,6 +60,9 @@ export const DocumentPrintPreviewModal: React.FC<DocumentPrintPreviewModalProps>
   // Ukuran ruang kosong kop surat standar (dalam centimeter)
   const [kopSpacingCm, setKopSpacingCm] = useState<number>(3.5);
 
+  // Digital Signature Toggle
+  const [showDigitalSignatures, setShowDigitalSignatures] = useState(true);
+
   // Signatory states: 1. Nama, 2. NIP, 3. Jabatan
   const [location, setLocation] = useState('Lubuk Sikaping');
   const [signDate, setSignDate] = useState(() => {
@@ -76,6 +80,9 @@ export const DocumentPrintPreviewModal: React.FC<DocumentPrintPreviewModalProps>
   const [sig1Nip, setSig1Nip] = useState('19780415 200501 1 004');
   const [sig1Position, setSig1Position] = useState('Kepala Satuan Pengawasan Intern (SPI)');
   const [sig1RoleLabel, setSig1RoleLabel] = useState('');
+  const [sig1SignatureUrl, setSig1SignatureUrl] = useState<string>('');
+  const [sig1SignatureType, setSig1SignatureType] = useState<'canvas' | 'upload' | 'qr' | undefined>(undefined);
+  const [sig1SignatureToken, setSig1SignatureToken] = useState<string>('');
 
   // Penandatangan 2 (Optional)
   const [showSig2, setShowSig2] = useState(defaultShowSignatory2);
@@ -84,6 +91,9 @@ export const DocumentPrintPreviewModal: React.FC<DocumentPrintPreviewModalProps>
   const [sig2Nip, setSig2Nip] = useState('19740612 199803 1 002');
   const [sig2Position, setSig2Position] = useState('Direktur Perumda Air Minum Tirta Saiyo');
   const [sig2RoleLabel, setSig2RoleLabel] = useState('Mengetahui / Menyetujui:');
+  const [sig2SignatureUrl, setSig2SignatureUrl] = useState<string>('');
+  const [sig2SignatureType, setSig2SignatureType] = useState<'canvas' | 'upload' | 'qr' | undefined>(undefined);
+  const [sig2SignatureToken, setSig2SignatureToken] = useState<string>('');
 
   // Penandatangan 3 (Optional)
   const [showSig3, setShowSig3] = useState(defaultShowSignatory3);
@@ -92,6 +102,9 @@ export const DocumentPrintPreviewModal: React.FC<DocumentPrintPreviewModalProps>
   const [sig3Nip, setSig3Nip] = useState('19890518 201402 2 003');
   const [sig3Position, setSig3Position] = useState('Ketua Tim Pemeriksa SPI');
   const [sig3RoleLabel, setSig3RoleLabel] = useState('Pemeriksa / Ketua Tim:');
+  const [sig3SignatureUrl, setSig3SignatureUrl] = useState<string>('');
+  const [sig3SignatureType, setSig3SignatureType] = useState<'canvas' | 'upload' | 'qr' | undefined>(undefined);
+  const [sig3SignatureToken, setSig3SignatureToken] = useState<string>('');
 
   // Fetch officials from Firestore
   useEffect(() => {
@@ -111,6 +124,9 @@ export const DocumentPrintPreviewModal: React.FC<DocumentPrintPreviewModalProps>
             setSig1Name(match1.name);
             setSig1Nip(match1.nip);
             setSig1Position(match1.position);
+            setSig1SignatureUrl(match1.digitalSignatureUrl || '');
+            setSig1SignatureType(match1.signatureType);
+            setSig1SignatureToken(match1.signatureToken || '');
           }
         }
 
@@ -123,6 +139,9 @@ export const DocumentPrintPreviewModal: React.FC<DocumentPrintPreviewModalProps>
             setSig2Name(match2.name);
             setSig2Nip(match2.nip);
             setSig2Position(match2.position);
+            setSig2SignatureUrl(match2.digitalSignatureUrl || '');
+            setSig2SignatureType(match2.signatureType);
+            setSig2SignatureToken(match2.signatureToken || '');
           }
         }
       }
@@ -141,6 +160,9 @@ export const DocumentPrintPreviewModal: React.FC<DocumentPrintPreviewModalProps>
       setSig1Name(sel.name);
       setSig1Nip(sel.nip);
       setSig1Position(sel.position);
+      setSig1SignatureUrl(sel.digitalSignatureUrl || '');
+      setSig1SignatureType(sel.signatureType);
+      setSig1SignatureToken(sel.signatureToken || '');
     }
   };
 
@@ -151,6 +173,9 @@ export const DocumentPrintPreviewModal: React.FC<DocumentPrintPreviewModalProps>
       setSig2Name(sel.name);
       setSig2Nip(sel.nip);
       setSig2Position(sel.position);
+      setSig2SignatureUrl(sel.digitalSignatureUrl || '');
+      setSig2SignatureType(sel.signatureType);
+      setSig2SignatureToken(sel.signatureToken || '');
     }
   };
 
@@ -162,6 +187,9 @@ export const DocumentPrintPreviewModal: React.FC<DocumentPrintPreviewModalProps>
       name: sig1Name,
       nip: sig1Nip,
       position: sig1Position,
+      digitalSignatureUrl: sig1SignatureUrl,
+      signatureType: sig1SignatureType,
+      signatureToken: sig1SignatureToken,
     },
     signatory2: showSig2
       ? {
@@ -169,6 +197,9 @@ export const DocumentPrintPreviewModal: React.FC<DocumentPrintPreviewModalProps>
           name: sig2Name,
           nip: sig2Nip,
           position: sig2Position,
+          digitalSignatureUrl: sig2SignatureUrl,
+          signatureType: sig2SignatureType,
+          signatureToken: sig2SignatureToken,
         }
       : undefined,
     signatory3: showSig3
@@ -177,6 +208,9 @@ export const DocumentPrintPreviewModal: React.FC<DocumentPrintPreviewModalProps>
           name: sig3Name,
           nip: sig3Nip,
           position: sig3Position,
+          digitalSignatureUrl: sig3SignatureUrl,
+          signatureType: sig3SignatureType,
+          signatureToken: sig3SignatureToken,
         }
       : undefined,
     showSignatory2: showSig2,
@@ -653,6 +687,23 @@ export const DocumentPrintPreviewModal: React.FC<DocumentPrintPreviewModalProps>
                 </div>
               </div>
 
+              {/* Tanda Tangan Digital Toggle */}
+              <div className="p-3 bg-emerald-50/70 rounded-xl border border-emerald-300 space-y-1.5 shadow-2xs">
+                <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-emerald-950">
+                  <input
+                    type="checkbox"
+                    checked={showDigitalSignatures}
+                    onChange={(e) => setShowDigitalSignatures(e.target.checked)}
+                    className="rounded text-emerald-700 focus:ring-emerald-500 h-4 w-4"
+                  />
+                  <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
+                  <span>Sertakan Tanda Tangan Digital Resmi</span>
+                </label>
+                <p className="text-[10px] text-emerald-800 pl-6 leading-tight">
+                  Menampilkan goresan tanda tangan / file / stempel QR verifikasi pejabat yang tersimpan di Fitur Jabatan & TTD.
+                </p>
+              </div>
+
               {/* PENANDATANGAN 1 (Utama) */}
               <div className="p-3 bg-white rounded-xl border border-emerald-300 shadow-2xs space-y-2">
                 <div className="flex items-center justify-between">
@@ -868,18 +919,30 @@ export const DocumentPrintPreviewModal: React.FC<DocumentPrintPreviewModalProps>
               {children(currentConfig)}
             </div>
 
-            {/* SIGNATURE BLOCK (Automatically Formatted According to Selected Officials) */}
+            {/* SIGNATURE BLOCK (Automatically Formatted According to Selected Officials & Digital Signatures) */}
             <div className="mt-12 pt-6 font-sans">
               {showSig2 ? (
                 // Dual Signature Layout (Left: Mengetahui / Right: Pembuat)
                 <div className="grid grid-cols-2 gap-8 text-xs">
                   {/* Left Signature (Mengetahui / Menyetujui) */}
-                  <div className="text-center space-y-16">
+                  <div className="text-center flex flex-col justify-between min-h-[150px]">
                     <div>
                       <p className="text-slate-500 text-[11px] mb-0.5">{sig2RoleLabel || 'Mengetahui / Menyetujui:'}</p>
-                      <p className="font-bold uppercase text-slate-900">
+                      <p className="font-bold uppercase text-slate-900 leading-tight">
                         {sig2Position}
                       </p>
+                    </div>
+
+                    <div className="h-16 flex items-center justify-center my-1">
+                      {showDigitalSignatures && sig2SignatureUrl ? (
+                        <img
+                          src={sig2SignatureUrl}
+                          alt={`TTD ${sig2Name}`}
+                          className="max-h-16 max-w-44 object-contain"
+                        />
+                      ) : (
+                        <div className="h-14" />
+                      )}
                     </div>
 
                     <div>
@@ -889,18 +952,35 @@ export const DocumentPrintPreviewModal: React.FC<DocumentPrintPreviewModalProps>
                       <p className="text-[11px] text-slate-600 font-mono">
                         {sig2Nip ? `NIP. ${sig2Nip}` : 'NIP. -'}
                       </p>
+                      {showDigitalSignatures && sig2SignatureToken && (
+                        <p className="text-[9px] text-emerald-800 font-mono tracking-tight mt-0.5 font-bold">
+                          ✓ Digital Verified: {sig2SignatureToken}
+                        </p>
+                      )}
                     </div>
                   </div>
 
                   {/* Right Signature (Pembuat / Pelapor) */}
-                  <div className="text-center space-y-16">
+                  <div className="text-center flex flex-col justify-between min-h-[150px]">
                     <div>
                       <p className="text-slate-500 text-[11px] mb-0.5">
                         {location}, {signDate}
                       </p>
-                      <p className="font-bold uppercase text-slate-900">
+                      <p className="font-bold uppercase text-slate-900 leading-tight">
                         {sig1Position}
                       </p>
+                    </div>
+
+                    <div className="h-16 flex items-center justify-center my-1">
+                      {showDigitalSignatures && sig1SignatureUrl ? (
+                        <img
+                          src={sig1SignatureUrl}
+                          alt={`TTD ${sig1Name}`}
+                          className="max-h-16 max-w-44 object-contain"
+                        />
+                      ) : (
+                        <div className="h-14" />
+                      )}
                     </div>
 
                     <div>
@@ -910,20 +990,37 @@ export const DocumentPrintPreviewModal: React.FC<DocumentPrintPreviewModalProps>
                       <p className="text-[11px] text-slate-600 font-mono">
                         {sig1Nip ? `NIP. ${sig1Nip}` : 'NIP. -'}
                       </p>
+                      {showDigitalSignatures && sig1SignatureToken && (
+                        <p className="text-[9px] text-emerald-800 font-mono tracking-tight mt-0.5 font-bold">
+                          ✓ Digital Verified: {sig1SignatureToken}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
               ) : (
                 // Single Signature Layout (Right Aligned)
                 <div className="flex justify-end text-xs">
-                  <div className="text-center w-72 space-y-16">
+                  <div className="text-center w-72 flex flex-col justify-between min-h-[150px]">
                     <div>
                       <p className="text-slate-500 text-[11px] mb-0.5">
                         {location}, {signDate}
                       </p>
-                      <p className="font-bold uppercase text-slate-900">
+                      <p className="font-bold uppercase text-slate-900 leading-tight">
                         {sig1Position}
                       </p>
+                    </div>
+
+                    <div className="h-16 flex items-center justify-center my-1">
+                      {showDigitalSignatures && sig1SignatureUrl ? (
+                        <img
+                          src={sig1SignatureUrl}
+                          alt={`TTD ${sig1Name}`}
+                          className="max-h-16 max-w-44 object-contain"
+                        />
+                      ) : (
+                        <div className="h-14" />
+                      )}
                     </div>
 
                     <div>
@@ -933,6 +1030,11 @@ export const DocumentPrintPreviewModal: React.FC<DocumentPrintPreviewModalProps>
                       <p className="text-[11px] text-slate-600 font-mono">
                         {sig1Nip ? `NIP. ${sig1Nip}` : 'NIP. -'}
                       </p>
+                      {showDigitalSignatures && sig1SignatureToken && (
+                        <p className="text-[9px] text-emerald-800 font-mono tracking-tight mt-0.5 font-bold">
+                          ✓ Digital Verified: {sig1SignatureToken}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>

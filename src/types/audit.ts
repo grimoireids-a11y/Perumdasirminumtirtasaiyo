@@ -47,18 +47,18 @@ export interface RiskRegister {
   year: number;
   unitId: string;
   unitName: string;
-  objective?: string;           // Sasaran/Tujuan unit kerja (Kaidah BPKP)
+  objective?: string;           // Sasaran/Tujuan unit kerja (Kaidah SPIP)
   businessProcess: string;
-  category: string;             // 8 Kategori Risiko BPKP
-  dimension?: RiskDimension;    // 3 Dimensi BPKP (Waktu, Kualitas, Keselamatan/Keamanan)
+  category: string;             // 8 Kategori Risiko SPIP
+  dimension?: RiskDimension;    // 3 Dimensi SPIP (Waktu, Kualitas, Keselamatan/Keamanan)
   causeCategory5M?: RiskCause5M;// Akar Masalah 5M (MAN, MONEY, MATERIAL, MACHINE, METHODE)
   cause: string;
-  event: string;                // Peristiwa Risiko (Kaidah BPKP: penghambat tujuan, bukan penyebab/dampak)
-  impactArea?: RiskImpactArea;  // Area Dampak BPKP
+  event: string;                // Peristiwa Risiko (Kaidah SPIP: penghambat tujuan, bukan penyebab/dampak)
+  impactArea?: RiskImpactArea;  // Area Dampak Risiko
   impactDesc: string;
   existingControl: string;
-  likelihood: number;           // 1 - 5 (Kriteria Frekuensi/Persentase BPKP)
-  impact: number;               // 1 - 5 (Kriteria Kerugian/Penundaan Layanan BPKP)
+  likelihood: number;           // 1 - 5 (Kriteria Frekuensi/Persentase SPIP)
+  impact: number;               // 1 - 5 (Kriteria Kerugian/Penundaan Layanan SPIP)
   inherentScore: number;        // likelihood * impact (1 - 25)
   inherentLevel: RiskLevel;
   controlEffectiveness: ControlEffectiveness;
@@ -71,7 +71,7 @@ export interface RiskRegister {
   pic: string;
   targetDate: string;
   status: 'Identifikasi' | 'Mitigasi' | 'Selesai';
-  // Peran Evaluasi SPI (Slide 3 & 12 Dokumen BPKP: Evaluasi atas Proses Manajemen Risiko)
+  // Peran Evaluasi SPI (Evaluasi atas Proses Manajemen Risiko Korporat)
   spiReviewStatus?: 'Diusulkan Auditee' | 'Sesuai Kaidah' | 'Perlu Perbaikan Kaidah';
   spiReviewNotes?: string;
   spiEvaluatedBy?: string;
@@ -229,9 +229,17 @@ export interface FollowUp {
   id: string;
   recommendationId: string;
   unitId: string;
+  unitName?: string;
   responseNotes: string;
+  actionSteps?: string;
+  progressPercent?: number;
+  actionDate?: string;
+  picName?: string;
   evidenceFileName?: string;
-  evidenceFileUrl?: string;
+  evidenceFileUrl?: string; // Tautan langsung / webViewLink Google Drive
+  evidenceDriveFileId?: string; // ID berkas Google Drive untuk penghapusan tuntas
+  evidenceFolderUrl?: string; // Tautan folder Google Drive bersama
+  evidenceDataUrl?: string; // Data URL lokal (opsional/legacy)
   submittedBy: string;
   submittedAt: string;
   verificationNotes?: string;
@@ -280,6 +288,10 @@ export interface OfficialSignatory {
   department?: string;
   order?: number;
   isActive?: boolean;
+  digitalSignatureUrl?: string; // Data URL Base64 tanda tangan (gambar / canvas)
+  signatureType?: 'canvas' | 'upload' | 'qr';
+  signatureToken?: string;      // Kode / Hash verifikasi naskah dinas resmi
+  signatureDate?: string;
 }
 
 export interface DocumentSignatureConfig {
@@ -339,6 +351,9 @@ export interface AuditReport {
   reviewedAt?: string;
   approvedBy?: string;
   approvedAt?: string;
+  syncedToFindings?: boolean;
+  syncedFindingsCount?: number;
+  syncedAt?: string;
   createdBy: string;
   createdAt: string;
   updatedAt: string;
@@ -398,8 +413,8 @@ export interface BPKPSelfAssessment {
   assessmentDate: string;
   evaluatorName: string;
   evaluatorRole: string;
-  status: 'Draft' | 'Verifikasi SPI' | 'Disetujui Direktur' | 'Final BPKP';
-  // Kinerja BPKP Metrics
+  status: 'Draft' | 'Verifikasi SPI' | 'Disetujui Direktur' | 'Final Terverifikasi';
+  // Kinerja SPIP Metrics
   kinerjaScore: number; // 1.00 - 5.00
   kinerjaCategory: BPKPKategoriKinerja;
   aspectScores: {

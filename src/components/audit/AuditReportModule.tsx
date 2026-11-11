@@ -37,6 +37,7 @@ import {
   AuditAssignment,
   WorkPaper,
   Finding,
+  Recommendation,
   AuditReport,
   AuditOpinion,
   AuditReportStatus,
@@ -47,11 +48,13 @@ import { DocumentPrintPreviewModal } from '../common/DocumentPrintPreviewModal';
 interface AuditReportModuleProps {
   onOpenAiAssistantWithContext?: (ctx: any) => void;
   initialAssignmentId?: string;
+  onNavigateToFindings?: () => void;
 }
 
 export const AuditReportModule: React.FC<AuditReportModuleProps> = ({
   onOpenAiAssistantWithContext,
   initialAssignmentId,
+  onNavigateToFindings,
 }) => {
   const { userProfile, hasRole } = useAuth();
 
@@ -59,6 +62,7 @@ export const AuditReportModule: React.FC<AuditReportModuleProps> = ({
   const [assignments, setAssignments] = useState<AuditAssignment[]>([]);
   const [workPapers, setWorkPapers] = useState<WorkPaper[]>([]);
   const [findings, setFindings] = useState<Finding[]>([]);
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
@@ -67,6 +71,15 @@ export const AuditReportModule: React.FC<AuditReportModuleProps> = ({
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   const [selectedReport, setSelectedReport] = useState<AuditReport | null>(null);
+
+  // Sync 5C Modal State
+  const [isSyncSuccessModalOpen, setIsSyncSuccessModalOpen] = useState(false);
+  const [isSyncingId, setIsSyncingId] = useState<string | null>(null);
+  const [syncModalData, setSyncModalData] = useState<{
+    reportNumber: string;
+    unitName: string;
+    items: Array<{ findingNum: string; title: string; recNum: string; recDesc: string }>;
+  } | null>(null);
 
   // Editor Tabs
   const [editorTab, setEditorTab] = useState<'general' | 'exec_summary' | 'internal_control' | 'conclusion' | 'status'>('general');
@@ -130,11 +143,16 @@ export const AuditReportModule: React.FC<AuditReportModuleProps> = ({
       setFindings(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Finding)));
     });
 
+    const unsubRecs = onSnapshot(collection(db, 'recommendations'), (snap) => {
+      setRecommendations(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Recommendation)));
+    });
+
     return () => {
       unsubReports();
       unsubAssignments();
       unsubWorkPapers();
       unsubFindings();
+      unsubRecs();
     };
   }, []);
 
@@ -182,7 +200,7 @@ export const AuditReportModule: React.FC<AuditReportModuleProps> = ({
     );
 
     setInternalControlEvaluation(
-      `Evaluasi komprehensif atas 5 (lima) unsur Sistem Pengendalian Intern Pemerintah (SPIP) berstandar BPKP pada ${ass.unitName} menunjukkan hasil sebagai berikut:\n\n1. Lingkungan Pengendalian: Pimpinan dan staf unit menunjukkan integritas serta kepatuhan etika kerja yang baik, namun pendelegasian wewenang dan supervisi harian masih perlu dipertegas melalui dokumentasi tertulis.\n\n2. Penilaian Risiko: Unit telah mengenali risiko operasional teknis kebocoran pipa, namun mitigasi terhadap risiko piutang rekening air macet dan risiko keterlambatan setoran kasir belum diidentifikasi secara formal.\n\n3. Kegiatan Pengendalian: Pemisahan tugas operasional telah berjalan, namun verifikasi berkala atas akurasi fisik meter air dan pencatatan mutasi barang fitting di gudang unit memerlukan pengawasan melekat.\n\n4. Informasi dan Komunikasi: Sistem billing terpusat telah beroperasi, namun integrasi pelaporan keluhan pelanggan dan kecepatan feedback dari tim teknis lapangan perlu ditingkatkan agar waktu respon < 24 jam.\n\n5. Pemantauan Pengendalian Intern: Pemantauan mandiri berkala oleh kepala unit masih bersifat insidental dan tindak lanjut rekomendasi audit sebelumnya perlu dipantau secara berkesinambungan.`
+      `Evaluasi komprehensif atas 5 (lima) unsur Sistem Pengendalian Intern Pemerintah (SPIP) Terpadu pada ${ass.unitName} menunjukkan hasil sebagai berikut:\n\n1. Lingkungan Pengendalian: Pimpinan dan staf unit menunjukkan integritas serta kepatuhan etika kerja yang baik, namun pendelegasian wewenang dan supervisi harian masih perlu dipertegas melalui dokumentasi tertulis.\n\n2. Penilaian Risiko: Unit telah mengenali risiko operasional teknis kebocoran pipa, namun mitigasi terhadap risiko piutang rekening air macet dan risiko keterlambatan setoran kasir belum diidentifikasi secara formal.\n\n3. Kegiatan Pengendalian: Pemisahan tugas operasional telah berjalan, namun verifikasi berkala atas akurasi fisik meter air dan pencatatan mutasi barang fitting di gudang unit memerlukan pengawasan melekat.\n\n4. Informasi dan Komunikasi: Sistem billing terpusat telah beroperasi, namun integrasi pelaporan keluhan pelanggan dan kecepatan feedback dari tim teknis lapangan perlu ditingkatkan agar waktu respon < 24 jam.\n\n5. Pemantauan Pengendalian Intern: Pemantauan mandiri berkala oleh kepala unit masih bersifat insidental dan tindak lanjut rekomendasi audit sebelumnya perlu dipantau secara berkesinambungan.`
     );
 
     setOverallConclusion(
@@ -466,6 +484,135 @@ export const AuditReportModule: React.FC<AuditReportModuleProps> = ({
     }
   };
 
+  // FITUR KEPALA SPI: Masukkan ke Temuan Audit (5C) Secara Otomatis
+  const handleSyncToFindings = async (report: AuditReport) => {
+    if (!canApprove && !canManage) {
+      alert('Fitur ini khusus untuk Kepala SPI dan Administrator Sistem.');
+      return;
+    }
+
+    setIsSyncingId(report.id);
+
+    try {
+      const summaryText =
+        report.keyFindingsSummary || report.executiveSummary || report.internalControlEvaluation || '';
+      const recsText = report.strategicRecommendations || '';
+
+      // Split summary into distinct findings
+      const rawFindingLines = summaryText
+        .split(/\n+/)
+        .map((line) => line.replace(/^(\d+[\.\)]|\-|\*)\s*/, '').trim())
+        .filter((line) => line.length > 20);
+
+      const findingsToCreate =
+        rawFindingLines.length > 0
+          ? rawFindingLines
+          : [
+              summaryText.trim() ||
+                `Evaluasi kepatuhan operasional dan efektivitas pengendalian intern pada ${report.unitName}`,
+            ];
+
+      const rawRecLines = recsText
+        .split(/\n+/)
+        .map((line) => line.replace(/^(\d+[\.\)]|\-|\*)\s*/, '').trim())
+        .filter((line) => line.length > 15);
+
+      let createdCount = 0;
+      const createdItems: Array<{ findingNum: string; title: string; recNum: string; recDesc: string }> = [];
+      const currentYear = new Date().getFullYear();
+
+      for (let i = 0; i < findingsToCreate.length; i++) {
+        const fText = findingsToCreate[i];
+        const fId = `fnd-sync-${Date.now()}-${i + 1}`;
+        const findingNumber = `5C/SPI/${currentYear}/${String(findings.length + i + 1).padStart(3, '0')}`;
+        const titleSnippet = fText.length > 80 ? fText.slice(0, 77) + '...' : fText;
+
+        const findingDoc: Finding = {
+          id: fId,
+          year: currentYear,
+          assignmentId: report.assignmentId || '',
+          assignmentTitle: report.auditTitle || '',
+          unitId: report.unitId || '',
+          unitName: report.unitName || '',
+          findingNumber,
+          title: titleSnippet,
+          category: 'Kepatuhan & Operasional BUMD',
+          riskLevel: 'Sedang',
+          condition: fText,
+          criteria:
+            'Standar Operasional Prosedur (SOP), Peraturan Direksi, dan Standar Pengendalian Intern Pemerintah (SPIP) BUMD Air Minum Tirta Saiyo.',
+          cause:
+            'Kelemahan pengawasan melekat berjenjang, belum optimalnya pemantauan berkala, atau keterbatasan sarana teknis di unit kerja.',
+          consequence:
+            'Berpotensi memicu inefisiensi biaya operasional, kehilangan potensi pendapatan air, atau meningkatnya keluhan pelanggan.',
+          potentialLoss: 0,
+          auditorAnalysis: `Temuan dimasukkan secara otomatis oleh Kepala SPI berdasarkan Laporan Hasil Audit (LHA) No: ${report.reportNumber} tanggal ${report.reportDate}.`,
+          status: 'Tindak Lanjut',
+          createdAt: new Date().toISOString(),
+        };
+
+        await setDoc(doc(db, 'findings', fId), findingDoc);
+
+        // Linked Recommendation
+        const recText =
+          rawRecLines[i] ||
+          rawRecLines[0] ||
+          `Melaksanakan tindakan perbaikan konkret dan penguatan SOP atas ${titleSnippet} serta melaporkan bukti aksi tindak lanjut ke SPI.`;
+        const rId = `rec-sync-${Date.now()}-${i + 1}`;
+        const recNumber = `REC/SPI/${currentYear}/${String(recommendations.length + i + 1).padStart(3, '0')}`;
+
+        const targetDateObj = new Date();
+        targetDateObj.setDate(targetDateObj.getDate() + 60);
+        const targetDateStr = targetDateObj.toISOString().slice(0, 10);
+
+        const recDoc: Recommendation = {
+          id: rId,
+          findingId: fId,
+          findingNumber,
+          findingTitle: titleSnippet,
+          unitId: report.unitId || '',
+          unitName: report.unitName || '',
+          recNumber,
+          description: recText,
+          pic: `Kepala Unit ${report.unitName}`,
+          targetDate: targetDateStr,
+          successIndicator:
+            'Dokumen berita acara dan bukti fisik aksi perbaikan telah diverifikasi memadai oleh tim pemeriksa SPI.',
+          status: 'Belum Ditindaklanjuti',
+        };
+
+        await setDoc(doc(db, 'recommendations', rId), recDoc);
+
+        createdCount++;
+        createdItems.push({
+          findingNum: findingNumber,
+          title: titleSnippet,
+          recNum: recNumber,
+          recDesc: recText,
+        });
+      }
+
+      // Mark report doc as synced
+      await updateDoc(doc(db, 'audit_reports', report.id), {
+        syncedToFindings: true,
+        syncedFindingsCount: createdCount,
+        syncedAt: new Date().toISOString(),
+      });
+
+      setSyncModalData({
+        reportNumber: report.reportNumber,
+        unitName: report.unitName,
+        items: createdItems,
+      });
+      setIsSyncSuccessModalOpen(true);
+    } catch (err: any) {
+      console.error('Error syncing LHA to findings 5C:', err);
+      alert('Gagal memasukkan temuan ke 5C: ' + (err.message || 'Error server'));
+    } finally {
+      setIsSyncingId(null);
+    }
+  };
+
   // Filtered list
   const filteredReports = reports.filter((r) => {
     const matchSearch =
@@ -648,6 +795,14 @@ export const AuditReportModule: React.FC<AuditReportModuleProps> = ({
                   <p className="text-[11px] font-mono font-semibold text-emerald-800 mt-1">
                     {r.reportNumber}
                   </p>
+                  {r.syncedToFindings && (
+                    <div className="mt-1.5 flex items-center gap-1.5">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold text-teal-800 bg-teal-50 border border-teal-300 rounded-md">
+                        <CheckCircle2 className="w-3 h-3 text-teal-600" />
+                        Terintegrasi ke Temuan 5C ({r.syncedFindingsCount || 1} Temuan)
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Details */}
@@ -682,15 +837,37 @@ export const AuditReportModule: React.FC<AuditReportModuleProps> = ({
               </div>
 
               {/* Card Footer Actions */}
-              <div className="px-5 py-3 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleOpenPrintModal(r)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-700 hover:text-emerald-800 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-lg transition-colors cursor-pointer"
-                >
-                  <Eye className="w-3.5 h-3.5 text-emerald-700" />
-                  <span>Tinjau & Cetak LHA</span>
-                </button>
+              <div className="px-5 py-3 bg-slate-50/80 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => handleOpenPrintModal(r)}
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-bold text-slate-700 hover:text-emerald-800 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-lg transition-colors cursor-pointer"
+                  >
+                    <Eye className="w-3.5 h-3.5 text-emerald-700" />
+                    <span>Tinjau LHA</span>
+                  </button>
+
+                  {/* Tombol Kepala SPI: Masukkan ke Temuan Audit (5C) Secara Otomatis */}
+                  {canApprove && (
+                    <button
+                      type="button"
+                      disabled={isSyncingId === r.id}
+                      onClick={() => handleSyncToFindings(r)}
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-bold text-emerald-950 bg-gradient-to-r from-amber-300 via-amber-200 to-yellow-300 hover:from-amber-400 hover:to-yellow-400 border border-amber-400/80 rounded-lg shadow-2xs transition-all disabled:opacity-50 cursor-pointer"
+                      title="Masukkan temuan dan rekomendasi LHA ini ke Temuan Audit (5C) secara otomatis"
+                    >
+                      <Layers className="w-3.5 h-3.5 text-emerald-900" />
+                      <span>
+                        {isSyncingId === r.id
+                          ? 'Menyinkronkan...'
+                          : r.syncedToFindings
+                          ? '✓ Sync Ulang ke 5C'
+                          : 'Masukkan ke Temuan (5C) Otomatis'}
+                      </span>
+                    </button>
+                  )}
+                </div>
 
                 <div className="flex items-center gap-1">
                   {canManage && (
@@ -1789,6 +1966,102 @@ export const AuditReportModule: React.FC<AuditReportModuleProps> = ({
             );
           }}
         </DocumentPrintPreviewModal>
+      )}
+
+      {/* MODAL SUKSES SINKRONISASI TEMUAN 5C & REKOMENDASI */}
+      {isSyncSuccessModalOpen && syncModalData && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="bg-linear-to-r from-emerald-600 to-teal-700 px-6 py-4 text-white flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-xs flex items-center justify-center text-white font-bold">
+                  <CheckCircle2 className="w-6 h-6 text-emerald-200" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg leading-tight">
+                    Sinkronisasi Temuan 5C Berhasil!
+                  </h3>
+                  <p className="text-xs text-emerald-100">
+                    Otomatis dimasukkan ke Register Temuan 5C & Tindak Lanjut
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsSyncSuccessModalOpen(false)}
+                className="text-white/80 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto space-y-4">
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-start gap-3">
+                <Sparkles className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
+                <div className="text-xs text-emerald-950 space-y-1">
+                  <p className="font-semibold text-emerald-900">
+                    LHA No. {syncModalData.reportNumber} ({syncModalData.unitName})
+                  </p>
+                  <p className="text-emerald-800">
+                    Sistem telah mengekstrak {syncModalData.items.length} butir temuan utama lengkap dengan rekomendasi perbaikan dan menugaskan PIC unit terkait secara otomatis.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                  Daftar Temuan 5C & Rekomendasi Terdaftar ({syncModalData.items.length})
+                </h4>
+                <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+                  {syncModalData.items.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1.5"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-mono font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded text-[11px]">
+                          {item.findingNum}
+                        </span>
+                        <span className="text-[10px] font-semibold text-slate-500 font-mono">
+                          {item.recNum}
+                        </span>
+                      </div>
+                      <p className="font-semibold text-slate-800">
+                        {item.title}
+                      </p>
+                      <p className="text-slate-600 text-[11px] bg-white p-2 rounded border border-slate-100">
+                        <strong className="text-slate-700">Rekomendasi: </strong>
+                        {item.recDesc}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-3">
+              <button
+                type="button"
+                onClick={() => setIsSyncSuccessModalOpen(false)}
+                className="px-4 py-2 text-xs font-bold text-slate-600 hover:text-slate-800 bg-white border border-slate-200 hover:bg-slate-100 rounded-xl transition-colors"
+              >
+                Tutup
+              </button>
+              {onNavigateToFindings && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsSyncSuccessModalOpen(false);
+                    onNavigateToFindings();
+                  }}
+                  className="px-5 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-xs transition-colors flex items-center gap-2"
+                >
+                  <Layers className="w-4 h-4" />
+                  Buka Modul Temuan 5C & Tindak Lanjut
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

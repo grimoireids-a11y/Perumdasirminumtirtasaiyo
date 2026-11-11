@@ -243,7 +243,7 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
     setReviewStatus(r.spiReviewStatus || 'Sesuai Kaidah');
     setReviewNotes(
       r.spiReviewNotes ||
-        `Rumusan risiko telah ditelaah oleh Satuan Pengawasan Intern (SPI) sesuai kaidah evaluasi BPKP (ISO 31000). Peristiwa risiko relevan terhadap sasaran unit ${r.unitName}, dengan akar penyebab 5M dan perlakuan risiko yang realistis.`
+        `Rumusan risiko telah ditelaah oleh Satuan Pengawasan Intern (SPI) sesuai kaidah evaluasi SPIP (ISO 31000). Peristiwa risiko relevan terhadap sasaran unit ${r.unitName}, dengan akar penyebab 5M dan perlakuan risiko yang realistis.`
     );
     setIsSpiReviewModalOpen(true);
   };
@@ -348,7 +348,7 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
       'Unit Kerja': r.unitName,
       'Sasaran / Tujuan Unit': r.objective || '-',
       'Proses Bisnis': r.businessProcess,
-      'Kategori Risiko BPKP': r.category,
+      'Kategori Risiko SPIP': r.category,
       '3 Dimensi Risiko': r.dimension || '-',
       'Peristiwa Risiko': r.event,
       'Akar Masalah (5M)': r.causeCategory5M || '-',
@@ -365,7 +365,7 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
       'Impact Residual': r.residualImpact,
       'Skor Residual': r.residualScore,
       'Tingkat Residual': r.residualLevel,
-      'Opsi Perlakuan (BPKP)': r.treatmentOption || 'Mengurangi (Reduce)',
+      'Opsi Perlakuan (SPIP)': r.treatmentOption || 'Mengurangi (Reduce)',
       'Rencana Mitigasi': r.mitigationPlan,
       PIC: r.pic,
       'Target Selesai': r.targetDate,
@@ -376,10 +376,10 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
 
     const ws = XLSX.utils.json_to_sheet(dataToExport);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Register Risiko BPKP');
+    XLSX.utils.book_append_sheet(wb, ws, 'Register Risiko SPIP');
     XLSX.writeFile(
       wb,
-      `Risk_Register_BPKP_Tirta_Saiyo_${isAuditee && auditeeUnitName ? auditeeUnitName.replace(/\s+/g, '_') : 'Korporat'}_${selectedYear}.xlsx`
+      `Risk_Register_SPIP_Tirta_Saiyo_${isAuditee && auditeeUnitName ? auditeeUnitName.replace(/\s+/g, '_') : 'Korporat'}_${selectedYear}.xlsx`
     );
   };
 
@@ -499,7 +499,7 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
               Mode Akses Auditee: Terbatas Khusus Unit Kerja "{auditeeUnitName || 'Unit Terdaftar'}"
             </p>
             <p className="text-amber-800 leading-relaxed">
-              Sesuai dengan tata kelola pengawasan intern dan pedoman manajemen risiko BPKP, akun Auditee hanya memiliki hak akses untuk menginput, memperbarui, dan memantau Register Risiko pada unit kerja Anda sendiri. Seluruh data yang Anda input akan dievaluasi oleh Satuan Pengawasan Intern (SPI).
+              Sesuai dengan tata kelola pengawasan intern dan pedoman manajemen risiko SPIP, akun Auditee hanya memiliki hak akses untuk menginput, memperbarui, dan memantau Register Risiko pada unit kerja Anda sendiri. Seluruh data yang Anda input akan dievaluasi oleh Satuan Pengawasan Intern (SPI).
             </p>
           </div>
         </div>
@@ -510,16 +510,16 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 rounded">
-              ISO 31000 & BPKP
+              ISO 31000 & SPIP
             </span>
             <span className="text-xs text-slate-400 font-mono">5×5 Risk Appetite Matrix</span>
           </div>
           <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2 mt-1">
             <AlertTriangle className="w-5 h-5 text-emerald-700" />
-            Register Risiko Unit & Evaluasi SPI (Berstandar BPKP)
+            Register Risiko Unit & Evaluasi SPI (Berstandar SPIP)
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Penyusunan risiko berlandaskan 3 Dimensi, Akar Masalah 5M, 8 Kategori Risiko BPKP, dan Evaluasi Pengawasan Intern SPI.
+            Penyusunan risiko berlandaskan 3 Dimensi, Akar Masalah 5M, 8 Kategori Risiko SPIP, dan Evaluasi Pengawasan Intern SPI.
           </p>
         </div>
 
@@ -527,7 +527,7 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
           <button
             onClick={() => setIsManualBookOpen(true)}
             className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-emerald-950 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 rounded-lg transition-colors shadow-2xs cursor-pointer"
-            title="Buka Buku Manual Lengkap Pengisian Register Risiko (Standar BPKP)"
+            title="Buka Buku Manual Lengkap Pengisian Register Risiko (Standar SPIP)"
           >
             <BookOpen className="w-3.5 h-3.5 text-emerald-800" />
             <span>Buku Panduan 5×5</span>
@@ -587,7 +587,7 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
           }`}
         >
           <BarChart3 className="w-4 h-4" />
-          <span>Peta Selera Risiko 5×5 (BPKP Heatmap)</span>
+          <span>Peta Selera Risiko 5×5 (SPIP Heatmap)</span>
         </button>
 
         <button
@@ -599,7 +599,7 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
           }`}
         >
           <ShieldCheck className="w-4 h-4" />
-          <span>Evaluasi Manajemen Risiko oleh SPI (Slide 3 & 12)</span>
+          <span>Evaluasi Manajemen Risiko oleh SPI</span>
         </button>
 
         <button
@@ -611,7 +611,7 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
           }`}
         >
           <BookOpen className="w-4 h-4" />
-          <span>Kaidah & Studi Kasus BPKP</span>
+          <span>Kaidah & Studi Kasus SPIP</span>
         </button>
       </div>
 
@@ -687,7 +687,7 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 className="px-2.5 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-slate-800"
               >
-                <option value="ALL">Semua Kategori BPKP</option>
+                <option value="ALL">Semua Kategori SPIP</option>
                 {BPKP_RISK_CATEGORIES.map((c) => (
                   <option key={c.id} value={c.name}>
                     {c.name}
@@ -716,7 +716,7 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
                 className="px-2.5 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-slate-800"
               >
                 <option value="ALL">Semua Status Telaah SPI</option>
-                <option value="Sesuai Kaidah">Sesuai Kaidah BPKP</option>
+                <option value="Sesuai Kaidah">Sesuai Kaidah SPIP</option>
                 <option value="Perlu Perbaikan Kaidah">Perlu Perbaikan Kaidah</option>
                 <option value="Diusulkan Auditee">Diusulkan Auditee</option>
               </select>
@@ -730,11 +730,11 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
                 <thead>
                   <tr className="bg-slate-50 border-b border-slate-200 text-slate-700 font-semibold">
                     <th className="py-3 px-3.5 w-24">Kode & Unit</th>
-                    <th className="py-3 px-3.5 min-w-[220px]">Sasaran, Peristiwa & Kategori BPKP</th>
+                    <th className="py-3 px-3.5 min-w-[220px]">Sasaran, Peristiwa & Kategori SPIP</th>
                     <th className="py-3 px-3.5 min-w-[200px]">Akar Masalah (5M) & Dampak</th>
                     <th className="py-3 px-3 text-center w-24">Inherent (L×I)</th>
                     <th className="py-3 px-3 text-center w-24">Residual (L×I)</th>
-                    <th className="py-3 px-3.5 min-w-[220px]">Opsi & Mitigasi (BPKP)</th>
+                    <th className="py-3 px-3.5 min-w-[220px]">Opsi & Mitigasi (SPIP)</th>
                     <th className="py-3 px-3 text-center w-24">Evaluasi SPI</th>
                     <th className="py-3 px-3 text-center w-28">Aksi</th>
                   </tr>
@@ -873,7 +873,7 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
                                       })
                                     }
                                     className="p-1 text-amber-600 hover:text-amber-800 rounded-md transition-colors"
-                                    title="Evaluasi Kaidah BPKP dengan Asisten AI"
+                                    title="Evaluasi Kaidah SPIP dengan Asisten AI"
                                   >
                                     <Sparkles className="w-3.5 h-3.5" />
                                   </button>
@@ -936,14 +936,14 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
         </div>
       )}
 
-      {/* TAB 2: PETA SELERA RISIKO 5X5 HEATMAP (SLIDE 9 DOKUMEN BPKP) */}
+      {/* TAB 2: PETA SELERA RISIKO 5X5 HEATMAP */}
       {activeTab === 'heatmap' && (
         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-xs space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
             <div>
               <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
                 <BarChart3 className="w-4 h-4 text-emerald-700" />
-                Matriks Selera Risiko 5×5 (Risk Appetite Heatmap) Sesuai Pedoman BPKP
+                Matriks Selera Risiko 5×5 (Risk Appetite Heatmap) Sesuai Pedoman SPIP
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
                 Pemetaan sebaran risiko residual berdasarkan tingkat kemungkinan (1-5) dan tingkat dampak (1-5). Klik salah satu sel untuk melihat rincian risiko.
@@ -1044,7 +1044,7 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
               Peran SPI: Melakukan Evaluasi atas Proses Manajemen Risiko
             </h3>
             <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-              Sesuai amanat BPKP (Slide 3 & 12), SPI bertugas melakukan evaluasi independen atas kecukupan identifikasi risiko, akurasi pemetaan akar penyebab 5M, dan ketepatan rencana perlakuan risiko (Reduce/Avoid/Transfer/Accept) yang disusun oleh masing-masing unit kerja (Auditee).
+              Sesuai amanat pengawasan intern (ISO 31000 & SPIP), SPI bertugas melakukan evaluasi independen atas kecukupan identifikasi risiko, akurasi pemetaan akar penyebab 5M, dan ketepatan rencana perlakuan risiko (Reduce/Avoid/Transfer/Accept) yang disusun oleh masing-masing unit kerja (Auditee).
             </p>
           </div>
 
@@ -1052,7 +1052,7 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
             <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs">
               <span className="font-bold text-emerald-950 block mb-1">1. Evaluasi Kaidah Identifikasi</span>
               <p className="text-emerald-800 leading-relaxed">
-                Memastikan Auditee tidak tertukar antara <strong>Tujuan</strong>, <strong>Peristiwa Risiko</strong>, <strong>Akar Masalah (5M)</strong>, dan <strong>Dampak</strong> (mengacu pada Studi Kasus BPKP slide 13-16).
+                Memastikan Auditee tidak tertukar antara <strong>Tujuan</strong>, <strong>Peristiwa Risiko</strong>, <strong>Akar Masalah (5M)</strong>, dan <strong>Dampak</strong> (mengacu pada Studi Kasus standar SPIP).
               </p>
             </div>
             <div className="p-4 bg-blue-50 rounded-xl border border-blue-200 text-xs">
@@ -1130,13 +1130,13 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
         </div>
       )}
 
-      {/* TAB 4: KAIDAH & STUDI KASUS BPKP (SLIDE 1-20 SUMMARY) */}
+      {/* TAB 4: KAIDAH & STUDI KASUS SPIP */}
       {activeTab === 'bpkp_guide' && (
         <div className="space-y-6">
           {/* Overview Banner */}
           <div className="bg-emerald-900 text-white p-5 rounded-xl shadow-xs space-y-2">
             <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-emerald-800 text-emerald-200 rounded">
-              Pedoman Resmi BPKP Perwakilan Sumbar (Padang, Mei 2026)
+              Pedoman Manajemen Risiko & SPIP Terpadu
             </span>
             <h3 className="text-base font-extrabold">
               Overview Evaluasi Manajemen Risiko pada Perumda Air Minum oleh SPI
@@ -1146,11 +1146,11 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
             </p>
           </div>
 
-          {/* 8 Kategori Risiko BPKP */}
+          {/* 8 Kategori Risiko SPIP */}
           <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-xs space-y-4">
             <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
               <Layers className="w-4 h-4 text-emerald-700" />
-              8 Kategori Risiko BPKP Resmi (Slide 5):
+              8 Kategori Risiko SPIP Terpadu:
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {BPKP_RISK_CATEGORIES.map((c) => (
@@ -1170,7 +1170,7 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
             </div>
           </div>
 
-          {/* Studi Kasus Pembelajaran Kaidah BPKP (Slide 13-16) */}
+          {/* Studi Kasus Pembelajaran Kaidah SPIP (Slide 13-16) */}
           <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-xs space-y-4">
             <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-700" />
@@ -1227,14 +1227,14 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
         </div>
       )}
 
-      {/* MODAL INPUT / EDIT RISIKO (BERSTANDAR BPKP) */}
+      {/* MODAL INPUT / EDIT RISIKO (BERSTANDAR SPIP) */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-white w-full max-w-3xl rounded-2xl shadow-xl overflow-hidden my-8">
             <div className="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
               <div>
                 <span className="px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wider bg-emerald-800 text-emerald-200 rounded">
-                  Format BPKP ISO 31000
+                  Format SPIP ISO 31000
                 </span>
                 <h3 className="text-sm font-bold mt-1">
                   {editingRisk ? 'Perbarui Register Risiko Unit' : 'Input Register Risiko Baru'}
@@ -1305,10 +1305,10 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
                 </div>
               </div>
 
-              {/* Sasaran / Tujuan Unit (Kaidah BPKP) */}
+              {/* Sasaran / Tujuan Unit (Kaidah SPIP) */}
               <div>
                 <label className="block font-semibold text-slate-700 mb-1">
-                  1. Sasaran / Tujuan Unit Kerja yang Ingin Dicapai (Kaidah BPKP)
+                  1. Sasaran / Tujuan Unit Kerja yang Ingin Dicapai (Kaidah SPIP)
                 </label>
                 <input
                   type="text"
@@ -1320,10 +1320,10 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
                 />
               </div>
 
-              {/* Kategori BPKP & 3 Dimensi */}
+              {/* Kategori SPIP & 3 Dimensi */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Kategori Risiko BPKP (Slide 5)</label>
+                  <label className="block font-semibold text-slate-700 mb-1">Kategori Risiko SPIP</label>
                   <select
                     value={formCategory}
                     onChange={(e) => setFormCategory(e.target.value)}
@@ -1596,7 +1596,7 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div>
                     <label className="block font-semibold text-slate-700 mb-1">
-                      7. Opsi Perlakuan Risiko BPKP (Slide 17)
+                      7. Opsi Perlakuan Risiko SPIP (ISO 31000)
                     </label>
                     <select
                       value={formTreatmentOption}
@@ -1719,14 +1719,14 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
 
               <div>
                 <label className="block font-bold text-slate-700 mb-1">
-                  Status Hasil Evaluasi SPI (Kaidah BPKP ISO 31000)
+                  Status Hasil Evaluasi SPI (Kaidah SPIP ISO 31000)
                 </label>
                 <select
                   value={reviewStatus}
                   onChange={(e) => setReviewStatus(e.target.value as any)}
                   className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg font-bold text-slate-900"
                 >
-                  <option value="Sesuai Kaidah">✅ Sesuai Kaidah BPKP (Valid & Disetujui)</option>
+                  <option value="Sesuai Kaidah">✅ Sesuai Kaidah SPIP (Valid & Disetujui)</option>
                   <option value="Perlu Perbaikan Kaidah">⚠️ Perlu Perbaikan Kaidah (Koreksi Rumusan / Mitigasi)</option>
                   <option value="Diusulkan Auditee">⏳ Diusulkan Auditee (Belum Selesai Ditelaah)</option>
                 </select>
@@ -1771,7 +1771,7 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
         <DocumentPrintPreviewModal
           isOpen={isPrintModalOpen}
           onClose={() => setIsPrintModalOpen(false)}
-          documentTitle="REGISTER RISIKO & PENGENDALIAN INTERN BERSTANDAR BPKP"
+          documentTitle="REGISTER RISIKO & PENGENDALIAN INTERN BERSTANDAR SPIP"
           documentSubtitle={`Perumda Air Minum Tirta Saiyo Kabupaten Pasaman - Tahun ${selectedYear}`}
           documentNumber={`RISK-REG/SPI-PTS/${selectedYear}`}
           initialSignatory1Role="Kepala Satuan Pengawasan Intern"
@@ -1793,13 +1793,13 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
                 </div>
                 <div>
                   <p className="text-slate-500 font-semibold">Standar & Kerangka Kerja:</p>
-                  <p className="font-bold text-slate-800">ISO 31000 & Pedoman Evaluasi MR BPKP</p>
+                  <p className="font-bold text-slate-800">ISO 31000 & Pedoman Evaluasi MR SPIP</p>
                 </div>
               </div>
 
               <div className="space-y-3">
                 <h4 className="font-bold text-slate-900 font-sans uppercase tracking-wider text-xs border-b-2 border-slate-800 pb-1">
-                  Matriks Register Risiko 5×5 (Inherent vs Residual) Berdasarkan Kaidah BPKP:
+                  Matriks Register Risiko 5×5 (Inherent vs Residual) Berdasarkan Kaidah SPIP:
                 </h4>
 
                 <div className="overflow-x-auto">
@@ -1883,7 +1883,7 @@ export const RiskRegisterModule: React.FC<RiskRegisterModuleProps> = ({
         </DocumentPrintPreviewModal>
       )}
 
-      {/* MANUAL BOOK MODAL (INTERAKTIF & CETAK BPKP) */}
+      {/* MANUAL BOOK MODAL (INTERAKTIF & CETAK SPIP) */}
       <RiskRegisterManualBookModal
         isOpen={isManualBookOpen}
         onClose={() => setIsManualBookOpen(false)}

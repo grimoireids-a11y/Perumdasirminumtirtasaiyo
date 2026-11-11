@@ -48,10 +48,10 @@ const AppContent: React.FC = () => {
 
   const isFullAccess = userProfile?.role === 'KEPALA_SPI' || userProfile?.role === 'ADMIN_SISTEM';
 
-  // Guard routes: strictly restrict non-Kepala SPI and non-Admin users to dashboard and risk_register
+  // Guard routes: restrict non-Kepala SPI and non-Admin users to dashboard, risk_register, and follow_ups (unit kerja)
   React.useEffect(() => {
     if (!loading && userProfile && !isFullAccess) {
-      if (activeTab !== 'dashboard' && activeTab !== 'risk_register') {
+      if (activeTab !== 'dashboard' && activeTab !== 'risk_register' && activeTab !== 'follow_ups') {
         setActiveTab('dashboard');
       }
     }
@@ -89,12 +89,12 @@ const AppContent: React.FC = () => {
   };
 
   const renderActiveTab = () => {
-    // If not full access, strictly allow only dashboard and risk_register
-    if (!isFullAccess && activeTab !== 'dashboard' && activeTab !== 'risk_register') {
+    // If not full access, allow only dashboard, risk_register, and follow_ups
+    if (!isFullAccess && activeTab !== 'dashboard' && activeTab !== 'risk_register' && activeTab !== 'follow_ups') {
       return (
         <DashboardOverview
           onNavigateTo={(tab) => {
-            if (tab === 'dashboard' || tab === 'risk_register') {
+            if (tab === 'dashboard' || tab === 'risk_register' || tab === 'follow_ups') {
               setActiveTab(tab);
             }
           }}
@@ -191,6 +191,7 @@ const AppContent: React.FC = () => {
           <AuditReportModule
             onOpenAiAssistantWithContext={handleOpenAiWithContext}
             initialAssignmentId={selectedAssignmentForLha}
+            onNavigateToFindings={() => setActiveTab('findings')}
           />
         );
       case 'findings':
@@ -265,7 +266,7 @@ const AppContent: React.FC = () => {
               : undefined
           }
           onNavigateToTab={(tab) => {
-            if (isFullAccess || tab === 'dashboard' || tab === 'risk_register') {
+            if (isFullAccess || tab === 'dashboard' || tab === 'risk_register' || tab === 'follow_ups') {
               setActiveTab(tab);
             }
           }}

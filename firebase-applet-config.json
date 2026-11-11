@@ -1,12 +1,11 @@
 {
-  "projectId": "propane-voltage-0wgw1",
-  "appId": "1:819145920034:web:f8d4efea24e8efef2b447b",
-  "apiKey": "AIzaSyD0v3jHBvO29c9hAWOt2ejLCk5uDbC3jBI",
-  "authDomain": "propane-voltage-0wgw1.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-f958ac99-7d86-4c7f-a4ce-d7db48a06a5c",
-  "storageBucket": "propane-voltage-0wgw1.firebasestorage.app",
-  "messagingSenderId": "819145920034",
+  "projectId": "gen-lang-client-0612149478",
+  "appId": "1:328649085429:web:ff2aac45d521c183b910bc",
+  "apiKey": "AIzaSyCDtBK9MmtNEuWYxpfBeMQLL5xUut2TBAE",
+  "authDomain": "gen-lang-client-0612149478.firebaseapp.com",
+  "storageBucket": "gen-lang-client-0612149478.firebasestorage.app",
+  "messagingSenderId": "328649085429",
   "measurementId": "",
-  "oAuthClientId": "819145920034-86ptg54p5flfah43qo8h805dvcj5hpp8.apps.googleusercontent.com",
+  "oAuthClientId": "328649085429-52aub5di9uhoenldpl2kmoncn2qsbcen.apps.googleusercontent.com",
   "recaptchaSiteKey": ""
 }

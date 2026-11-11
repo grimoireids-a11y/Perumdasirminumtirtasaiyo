@@ -65,7 +65,7 @@ export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({
     {
       label: 'Mitigasi Tingkat Kehilangan Air (NRW > 35%)',
       mode: 'suggest_mitigation' as const,
-      text: 'Tingkat kehilangan air fisik dan komersial (Non-Revenue Water) mencapai 38,4%, melebihi ambang batas toleransi BPKP (20%), akibat kebocoran pipa transmisi tua dan water meter pelanggan yang rusak/tidak tera.',
+      text: 'Tingkat kehilangan air fisik dan komersial (Non-Revenue Water) mencapai 38,4%, melebihi ambang batas toleransi standar nasional (20%), akibat kebocoran pipa transmisi tua dan water meter pelanggan yang rusak/tidak tera.',
     },
     {
       label: 'Indikasi Fraud Kasir Pembayaran Rekening',
@@ -73,7 +73,7 @@ export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({
       text: 'Penerimaan pembayaran kasir loket tidak segera disetorkan ke rekening bank pada hari yang sama (lapping cash), selisih rekapitulasi harian kasir fisik dengan sistem billing mencapai Rp 28.500.000.',
     },
     {
-      label: 'Konsultasi Pengawasan BPKP & SPIP',
+      label: 'Konsultasi Pengawasan & Maturitas SPIP',
       mode: 'free_prompt' as const,
       text: 'Bagaimana langkah prioritas SPI Perumda Air Minum Tirta Saiyo dalam mendongkrak skor maturitas SPIP dari level Berkembang (2) menuju level Terdefinisi (3)?',
     },

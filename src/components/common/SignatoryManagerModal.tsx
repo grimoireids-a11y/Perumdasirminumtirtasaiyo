@@ -19,10 +19,12 @@ import {
   Briefcase,
   Building,
   RotateCcw,
+  ShieldCheck,
 } from 'lucide-react';
 import { db } from '../../lib/firebase';
 import { OfficialSignatory } from '../../types/audit';
 import { INITIAL_OFFICIALS } from '../../data/initialData';
+import { DigitalSignaturePad } from './DigitalSignaturePad';
 
 interface SignatoryManagerModalProps {
   isOpen: boolean;
@@ -39,11 +41,14 @@ export const SignatoryManagerModal: React.FC<SignatoryManagerModalProps> = ({
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  // Form states: 1. Nama, 2. NIP, 3. Jabatan
+  // Form states: 1. Nama, 2. NIP, 3. Jabatan, 4. TTD Digital
   const [formName, setFormName] = useState('');
   const [formNip, setFormNip] = useState('');
   const [formPosition, setFormPosition] = useState('');
   const [formDepartment, setFormDepartment] = useState('');
+  const [formSignatureUrl, setFormSignatureUrl] = useState<string>('');
+  const [formSignatureType, setFormSignatureType] = useState<'canvas' | 'upload' | 'qr' | undefined>(undefined);
+  const [formSignatureToken, setFormSignatureToken] = useState<string>('');
   const [notice, setNotice] = useState('');
 
   useEffect(() => {
@@ -66,6 +71,9 @@ export const SignatoryManagerModal: React.FC<SignatoryManagerModalProps> = ({
     setFormNip('');
     setFormPosition('');
     setFormDepartment('Satuan Pengawasan Intern');
+    setFormSignatureUrl('');
+    setFormSignatureType(undefined);
+    setFormSignatureToken('');
     setIsFormOpen(true);
   };
 
@@ -75,6 +83,9 @@ export const SignatoryManagerModal: React.FC<SignatoryManagerModalProps> = ({
     setFormNip(ofc.nip);
     setFormPosition(ofc.position);
     setFormDepartment(ofc.department || '');
+    setFormSignatureUrl(ofc.digitalSignatureUrl || '');
+    setFormSignatureType(ofc.signatureType);
+    setFormSignatureToken(ofc.signatureToken || '');
     setIsFormOpen(true);
   };
 
@@ -92,6 +103,10 @@ export const SignatoryManagerModal: React.FC<SignatoryManagerModalProps> = ({
           nip: formNip.trim(),
           position: formPosition.trim(),
           department: formDepartment.trim(),
+          digitalSignatureUrl: formSignatureUrl || '',
+          signatureType: formSignatureType || null,
+          signatureToken: formSignatureToken || '',
+          signatureDate: formSignatureUrl ? new Date().toISOString() : '',
         });
         setNotice(`Jabatan "${formPosition}" berhasil diperbarui.`);
       } else {
@@ -104,6 +119,10 @@ export const SignatoryManagerModal: React.FC<SignatoryManagerModalProps> = ({
           department: formDepartment.trim(),
           order: officials.length + 1,
           isActive: true,
+          digitalSignatureUrl: formSignatureUrl || '',
+          signatureType: formSignatureType,
+          signatureToken: formSignatureToken || '',
+          signatureDate: formSignatureUrl ? new Date().toISOString() : '',
         };
         await setDoc(doc(db, 'signatories', id), newOfc);
         setNotice(`Jabatan "${formPosition}" berhasil ditambahkan.`);
@@ -288,6 +307,26 @@ export const SignatoryManagerModal: React.FC<SignatoryManagerModalProps> = ({
                 </div>
               </div>
 
+              {/* Tanda Tangan Digital Pad */}
+              <div className="pt-1">
+                <DigitalSignaturePad
+                  initialSignatureUrl={formSignatureUrl}
+                  officialName={formName || 'Pejabat Penandatangan'}
+                  officialNip={formNip}
+                  officialPosition={formPosition || 'Pejabat Struktural'}
+                  onSave={(dataUrl, type, token) => {
+                    setFormSignatureUrl(dataUrl);
+                    setFormSignatureType(type);
+                    setFormSignatureToken(token);
+                  }}
+                  onRemove={() => {
+                    setFormSignatureUrl('');
+                    setFormSignatureType(undefined);
+                    setFormSignatureToken('');
+                  }}
+                />
+              </div>
+
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
@@ -323,11 +362,16 @@ export const SignatoryManagerModal: React.FC<SignatoryManagerModalProps> = ({
                       {idx + 1}
                     </div>
                     <div className="min-w-0">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <h4 className="font-bold text-slate-900 text-xs truncate">{ofc.name}</h4>
                         {ofc.department && (
                           <span className="px-1.5 py-0.2 text-[10px] font-medium text-emerald-800 bg-emerald-50 rounded border border-emerald-200 truncate">
                             {ofc.department}
+                          </span>
+                        )}
+                        {ofc.digitalSignatureUrl && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-100/80 px-2 py-0.2 rounded-full border border-emerald-300">
+                            <ShieldCheck className="w-3 h-3 text-emerald-700" /> TTD Digital Aktif
                           </span>
                         )}
                       </div>

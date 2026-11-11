@@ -46,7 +46,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       case 'rcsa':
         return 'Penilaian Sendiri Risiko Unit (RCSA)';
       case 'bpkp_assessment':
-        return 'Self Assessment Kinerja & Maturitas SPIP Berstandar BPKP';
+        return 'Self Assessment Kinerja & Maturitas SPIP Terpadu';
       case 'pkpt':
         return 'Penyusunan Program Kerja Pengawasan Tahunan (PKPT)';
       case 'spi_programs':

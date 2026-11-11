@@ -96,9 +96,9 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
     return () => unsub();
   }, []);
 
-  // Bootstrap initial BPKP baseline assessment
+  // Bootstrap initial SPIP baseline assessment
   const bootstrapInitialBpkpAssessment = async () => {
-    const initialId = `BPKP-SA-${currentYear}`;
+    const initialId = `SPI-SA-${currentYear}`;
     const initialDoc: BPKPSelfAssessment = {
       id: initialId,
       year: currentYear,
@@ -120,7 +120,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
       spipMaturityLevel: 'Level 4 - Terkelola & Terukur',
       spipElements: INITIAL_SPIP_ELEMENTS,
       aiExecutiveSummary:
-        'Kinerja Perumda Air Minum Tirta Saiyo Kabupaten Pasaman berdasarkan petunjuk teknis penilaian kinerja BPKP berada pada predikat SEHAT - BAIK SEKALI (Skor 4.41). Kinerja keuangan dan aspek pelayanan sangat solid dengan likuiditas tinggi. Pengendalian internal SPIP mencapai Level 4 (Terkelola & Terukur) dengan catatan perbaikan prioritas pada penurunan tingkat kehilangan air (NRW) dan sertifikasi kompetensi SDM.',
+        'Kinerja Perumda Air Minum Tirta Saiyo Kabupaten Pasaman berdasarkan petunjuk teknis penilaian kinerja BUMD Air Minum berada pada predikat SEHAT - BAIK SEKALI (Skor 4.41). Kinerja keuangan dan aspek pelayanan sangat solid dengan likuiditas tinggi. Pengendalian internal SPIP mencapai Level 4 (Terkelola & Terukur) dengan catatan perbaikan prioritas pada penurunan tingkat kehilangan air (NRW) dan sertifikasi kompetensi SDM.',
       aiStrategicRecommendations:
         '1. Implementasikan District Metered Area (DMA) dan percepatan program kalibrasi water meter untuk menekan NRW di bawah target 25%.\n2. Tingkatkan porsi audit kepatuhan berbasis risiko pada unit transmisi dan pelayanan cabang.\n3. Perkuat sistem Whistleblowing System (WBS) dan evaluasi SOP pelayanan air yang telah berusia lebih dari 3 tahun.',
       createdBy: userProfile?.displayName || 'Kepala SPI',
@@ -134,7 +134,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
       setEditableIndicators(INITIAL_BPKP_KINERJA_INDICATORS);
       setEditableSpipElements(INITIAL_SPIP_ELEMENTS);
     } catch (e) {
-      console.error('Failed to bootstrap initial BPKP assessment:', e);
+      console.error('Failed to bootstrap initial assessment:', e);
     }
   };
 
@@ -150,7 +150,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
 
   // Create New Year Assessment
   const handleCreateNewYearAssessment = async () => {
-    const targetYear = prompt('Masukkan Tahun Anggaran Penilaian Self Assessment BPKP:', String(currentYear + 1));
+    const targetYear = prompt('Masukkan Tahun Anggaran Penilaian Self Assessment SPIP:', String(currentYear + 1));
     if (!targetYear) return;
     const yearNum = parseInt(targetYear, 10);
     if (isNaN(yearNum)) {
@@ -158,7 +158,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
       return;
     }
 
-    const newId = `BPKP-SA-${yearNum}`;
+    const newId = `SA-SPIP-${yearNum}`;
     const newDoc: BPKPSelfAssessment = {
       id: newId,
       year: yearNum,
@@ -189,7 +189,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
       setActiveAssessment(newDoc);
       setEditableIndicators(INITIAL_BPKP_KINERJA_INDICATORS);
       setEditableSpipElements(INITIAL_SPIP_ELEMENTS);
-      alert(`Lembar Self Assessment BPKP Tahun ${yearNum} berhasil dibuat.`);
+      alert(`Lembar Self Assessment SPIP Tahun ${yearNum} berhasil dibuat.`);
     } catch (err: any) {
       alert('Gagal membuat asesmen: ' + err.message);
     }
@@ -276,7 +276,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
       await setDoc(doc(db, 'bpkp_assessments', activeAssessment.id), updatedDoc, { merge: true });
       setActiveAssessment(updatedDoc);
       setIsEditing(false);
-      alert('Perubahan Self Assessment BPKP berhasil disimpan.');
+      alert('Perubahan Self Assessment SPIP berhasil disimpan.');
     } catch (err: any) {
       alert('Gagal menyimpan perubahan: ' + err.message);
     }
@@ -310,7 +310,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
 
       if (!response.ok) {
         const errData = await response.json();
-        throw new Error(errData.error || 'Gagal memproses analisis diagnostik BPKP.');
+        throw new Error(errData.error || 'Gagal memproses analisis diagnostik SPIP.');
       }
 
       const res = await response.json();
@@ -336,7 +336,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
       await setDoc(doc(db, 'bpkp_assessments', activeAssessment.id), updatedAssessment, { merge: true });
       setActiveAssessment(updatedAssessment);
 
-      setAiSuccessMsg('Analisis Diagnostik BPKP oleh AI Gemini berhasil diselesaikan.');
+      setAiSuccessMsg('Analisis Diagnostik Penyelenggaraan SPIP oleh AI Gemini berhasil diselesaikan.');
       setViewTab('diagnostic');
     } catch (err: any) {
       console.error(err);
@@ -358,15 +358,15 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-900 rounded-lg">
-              Standar Resmi BPKP RI
+              Standar Resmi SPIP Terpadu
             </span>
             <span className="text-xs text-slate-500 font-medium">
-              Petunjuk Teknis BUMD Air Minum & Peraturan BPKP No. 5/2021
+              Petunjuk Teknis BUMD Air Minum & PP 60/2008
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
             <Award className="w-6 h-6 text-emerald-700" />
-            <span>Self Assessment Kinerja & Maturitas SPIP Berstandar BPKP</span>
+            <span>Self Assessment Kinerja & Maturitas Penyelenggaraan SPIP</span>
           </h1>
           <p className="text-xs text-slate-600 max-w-3xl">
             Instrumen evaluasi mandiri komprehensif Perumda Air Minum Tirta Saiyo Kabupaten Pasaman mencakup 4 Aspek Kinerja BUMD Air Minum (Keuangan, Pelayanan, Operasional, SDM) dan 5 Unsur Maturitas SPIP Terintegrasi.
@@ -378,14 +378,14 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
             onClick={handleRunAiDiagnostic}
             disabled={isAiAnalyzing || !activeAssessment}
             className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-emerald-950 bg-gradient-to-r from-amber-300 via-amber-200 to-yellow-300 hover:from-amber-400 hover:to-yellow-400 rounded-xl shadow-xs transition-all disabled:opacity-50 cursor-pointer"
-            title="Jalankan evaluasi diagnostik dan rekomendasi peningkatan BPKP dengan AI Gemini"
+            title="Jalankan evaluasi diagnostik dan rekomendasi peningkatan SPIP dengan AI Gemini"
           >
             {isAiAnalyzing ? (
               <Loader2 className="w-4 h-4 animate-spin text-emerald-900" />
             ) : (
               <Sparkles className="w-4 h-4 text-emerald-900" />
             )}
-            <span>{isAiAnalyzing ? 'Menganalisis BPKP...' : '✨ Diagnostik AI BPKP'}</span>
+            <span>{isAiAnalyzing ? 'Menganalisis SPIP...' : '✨ Diagnostik AI SPIP'}</span>
           </button>
 
           {activeAssessment && (
@@ -437,10 +437,10 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
       {/* Active Assessment Executive KPI Dashboard */}
       {activeAssessment && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Card 1: Kategori Kinerja BPKP */}
+          {/* Card 1: Kategori Kinerja SPIP */}
           <div className="bg-gradient-to-br from-emerald-800 to-teal-900 text-white p-5 rounded-2xl shadow-sm relative overflow-hidden">
             <div className="flex items-center justify-between text-xs text-emerald-200 mb-1">
-              <span>Status Kinerja BPKP</span>
+              <span>Status Kinerja SPIP</span>
               <Award className="w-4 h-4 text-amber-300" />
             </div>
             <p className="text-xl font-black text-amber-300 tracking-tight">
@@ -475,10 +475,10 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
             </p>
           </div>
 
-          {/* Card 3: Rincian 4 Aspek Kinerja BPKP */}
+          {/* Card 3: Rincian 4 Aspek Kinerja */}
           <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs space-y-1.5 text-xs">
             <div className="font-bold text-slate-800 flex items-center justify-between pb-1 border-b border-slate-100">
-              <span>Bobot Aspek BPKP:</span>
+              <span>Bobot Aspek Kinerja:</span>
               <span className="text-[10px] text-emerald-700 font-semibold">Capaian</span>
             </div>
             <div className="grid grid-cols-2 gap-2 text-[11px]">
@@ -558,7 +558,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
               }`}
             >
               <Droplets className="w-4 h-4" />
-              <span>1. Evaluasi Kinerja BUMD BPKP (18 Indikator)</span>
+              <span>1. Evaluasi Kinerja BUMD (18 Indikator)</span>
             </button>
 
             <button
@@ -582,7 +582,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
               }`}
             >
               <Sparkles className="w-4 h-4 text-amber-200" />
-              <span>3. Diagnostik & Analisis AI BPKP</span>
+              <span>3. Diagnostik & Analisis AI SPIP</span>
             </button>
           </div>
 
@@ -600,7 +600,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
                 ) : (
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:text-emerald-900 bg-white border border-slate-300 rounded-lg shadow-2xs transition-all cursor-pointer"
+                    className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-emerald-900 bg-white border border-slate-300 rounded-lg shadow-2xs transition-all cursor-pointer"
                   >
                     <Edit className="w-3.5 h-3.5 text-emerald-700" />
                     <span>Edit Nilai & Bukti Dukung</span>
@@ -611,7 +611,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
           </div>
         </div>
 
-        {/* TAB 1: EVALUASI KINERJA BUMD AIR MINUM STANDAR BPKP */}
+        {/* TAB 1: EVALUASI KINERJA BUMD AIR MINUM */}
         {viewTab === 'kinerja' && (
           <div className="p-5 space-y-4">
             {/* Filter Aspek */}
@@ -636,7 +636,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
               </div>
 
               <div className="text-[11px] text-slate-500">
-                Standar Petunjuk Teknis Evaluasi BPKP RI · Bobot Maksimum Total 100% (5.00)
+                Standar Petunjuk Teknis Evaluasi Kinerja BUMD Air Minum · Bobot Maksimum Total 100% (5.00)
               </div>
             </div>
 
@@ -646,7 +646,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
                 <thead className="bg-slate-100/80 text-slate-700 uppercase font-bold text-[10px] tracking-wider border-b border-slate-200">
                   <tr>
                     <th className="p-3 w-12 text-center">Kode</th>
-                    <th className="p-3">Indikator Kinerja Standar BPKP</th>
+                    <th className="p-3">Indikator Kinerja Standar BUMD</th>
                     <th className="p-3 w-28">Rumus & Acuan</th>
                     <th className="p-3 w-20 text-center">Target</th>
                     <th className="p-3 w-24 text-center">Realisasi</th>
@@ -743,20 +743,20 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
           </div>
         )}
 
-        {/* TAB 2: MATURITAS PENYELENGGARAAN SPIP TERINTEGRASI BPKP */}
+        {/* TAB 2: MATURITAS PENYELENGGARAAN SPIP TERINTEGRASI */}
         {viewTab === 'spip' && (
           <div className="p-5 space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 text-xs">
               <div>
                 <h3 className="font-bold text-slate-900 text-sm">
-                  Evaluasi Maturitas SPIP Terintegrasi (PP 60/2008 & Peraturan BPKP 5/2021)
+                  Evaluasi Maturitas SPIP Terintegrasi (PP 60/2008 & Pedoman Pengawasan Intern)
                 </h3>
                 <p className="text-[11px] text-slate-500">
                   Penilaian mandiri atas kecukupan rancangan dan efektivitas implementasi 5 unsur pengendalian intern.
                 </p>
               </div>
               <span className="px-3 py-1 text-xs font-extrabold bg-emerald-100 text-emerald-900 rounded-lg">
-                Target Standar BPKP: Level 3 (Terdefinisi)
+                Target Standar SPIP: Level 3 (Terdefinisi)
               </span>
             </div>
 
@@ -812,7 +812,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
                   </div>
 
                   <p className="text-xs text-slate-600 bg-white p-2 rounded-lg border border-slate-100 leading-relaxed">
-                    <strong className="text-slate-800 font-semibold">Kriteria BPKP: </strong>
+                    <strong className="text-slate-800 font-semibold">Kriteria Standar SPIP: </strong>
                     {el.bpkpCriteria}
                   </p>
 
@@ -855,17 +855,17 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
           </div>
         )}
 
-        {/* TAB 3: DIAGNOSTIK & ANALISIS AI BPKP */}
+        {/* TAB 3: DIAGNOSTIK & ANALISIS AI SPIP */}
         {viewTab === 'diagnostic' && (
           <div className="p-6 space-y-6">
             <div className="flex items-center justify-between pb-3 border-b border-slate-200">
               <div className="space-y-0.5">
                 <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-amber-500" />
-                  <span>Hasil Analisis Diagnostik & Rekomendasi Peningkatan BPKP</span>
+                  <span>Hasil Analisis Diagnostik & Rekomendasi Peningkatan SPIP</span>
                 </h3>
                 <p className="text-xs text-slate-500">
-                  Dianalisis secara komprehensif menggunakan kecerdasan buatan (Gemini) berstandar BPKP RI.
+                  Dianalisis secara komprehensif menggunakan kecerdasan buatan (Gemini) berstandar SPIP Terpadu.
                 </p>
               </div>
 
@@ -885,12 +885,12 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
               <div className="p-5 bg-emerald-50/70 border border-emerald-200 rounded-2xl space-y-2">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-950 flex items-center gap-1.5">
                   <FileText className="w-4 h-4 text-emerald-700" />
-                  Ringkasan Eksekutif Hasil Asesmen BPKP
+                  Ringkasan Eksekutif Hasil Asesmen SPIP
                 </h4>
                 <p className="text-xs text-slate-700 leading-relaxed text-justify">
                   {aiAnalysisResult?.executiveSummary || activeAssessment?.aiExecutiveSummary || (
                     <span className="italic text-slate-400">
-                      Klik tombol "Diagnostik AI BPKP" di bagian atas untuk merumuskan ringkasan eksekutif secara otomatis.
+                      Klik tombol "Diagnostik AI SPIP" di bagian atas untuk merumuskan ringkasan eksekutif secara otomatis.
                     </span>
                   )}
                 </p>
@@ -919,7 +919,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
             <div className="p-5 bg-white border border-slate-200 rounded-2xl space-y-3">
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
                 <TrendingUp className="w-4 h-4 text-emerald-700" />
-                Rekomendasi Tindak Lanjut Strategis & Roadmap Peningkatan BPKP
+                Rekomendasi Tindak Lanjut Strategis & Roadmap Peningkatan SPIP
               </h4>
               <div className="text-xs text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50 p-4 rounded-xl border border-slate-200 font-sans">
                 {aiAnalysisResult?.strategicRecommendations || activeAssessment?.aiStrategicRecommendations || (
@@ -931,14 +931,14 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
         )}
       </div>
 
-      {/* PRINT PREVIEW MODAL DOKUMEN LAPORAN SELF ASSESSMENT BPKP */}
+      {/* PRINT PREVIEW MODAL DOKUMEN LAPORAN SELF ASSESSMENT SPIP */}
       {isPrintModalOpen && activeAssessment && (
         <DocumentPrintPreviewModal
           isOpen={isPrintModalOpen}
           onClose={() => setIsPrintModalOpen(false)}
           documentTitle="LAPORAN HASIL SELF ASSESSMENT KINERJA & MATURITAS SPIP"
-          documentSubtitle={`Standar BPKP RI · Tahun Anggaran ${activeAssessment.year}`}
-          documentNumber={`700.1/SA-BPKP/PTS/${activeAssessment.year}`}
+          documentSubtitle={`Standar SPIP Nasional · Tahun Anggaran ${activeAssessment.year}`}
+          documentNumber={`700.1/SA-SPIP/PTS/${activeAssessment.year}`}
           initialSignatory1Role="Kepala Satuan Pengawasan Intern"
           initialSignatory2Role="Direktur Perumda Air Minum Tirta Saiyo"
           defaultShowSignatory2={true}
@@ -960,7 +960,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
                       <td className="py-0.5 font-bold">{activeAssessment.year}</td>
                     </tr>
                     <tr>
-                      <td className="font-bold text-slate-700 py-0.5">Predikat Kinerja BPKP</td>
+                      <td className="font-bold text-slate-700 py-0.5">Predikat Kinerja SPIP</td>
                       <td className="text-center">:</td>
                       <td className="py-0.5 font-bold text-emerald-900">
                         {activeAssessment.kinerjaCategory} (Skor: {activeAssessment.kinerjaScore.toFixed(2)} / 5.00)
@@ -985,25 +985,25 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
               {/* Bab I: Ringkasan Eksekutif */}
               <div className="space-y-2">
                 <h4 className="font-sans font-bold uppercase tracking-wider text-xs border-b border-slate-400 pb-1 text-slate-900">
-                  I. RINGKASAN EKSEKUTIF HASIL ASESMEN MANDIRI BPKP
+                  I. RINGKASAN EKSEKUTIF HASIL ASESMEN MANDIRI SPIP
                 </h4>
                 <p className="text-justify leading-relaxed">
                   {activeAssessment.aiExecutiveSummary ||
-                    'Self assessment kinerja dan maturitas sistem pengendalian intern pemerintah (SPIP) dilaksanakan berpedoman pada Petunjuk Teknis Penilaian Kinerja BUMD Air Minum BPKP dan Peraturan BPKP No. 5 Tahun 2021.'}
+                    'Self assessment kinerja dan maturitas sistem pengendalian intern pemerintah (SPIP) dilaksanakan berpedoman pada Petunjuk Teknis Penilaian Kinerja BUMD Air Minum dan PP 60/2008.'}
                 </p>
               </div>
 
-              {/* Bab II: Tabel Evaluasi 4 Aspek Kinerja BPKP */}
+              {/* Bab II: Tabel Evaluasi 4 Aspek Kinerja */}
               <div className="space-y-2">
                 <h4 className="font-sans font-bold uppercase tracking-wider text-xs border-b border-slate-400 pb-1 text-slate-900">
-                  II. EVALUASI INDIKATOR KINERJA BUMD AIR MINUM STANDAR BPKP
+                  II. EVALUASI INDIKATOR KINERJA BUMD AIR MINUM STANDAR SPIP
                 </h4>
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse border border-slate-400 text-[10px]">
                     <thead className="bg-slate-100 font-sans font-bold text-center">
                       <tr>
                         <th className="border border-slate-400 p-1 w-8">No</th>
-                        <th className="border border-slate-400 p-1">Indikator Standar BPKP</th>
+                        <th className="border border-slate-400 p-1">Indikator Standar SPIP</th>
                         <th className="border border-slate-400 p-1 w-14">Bobot</th>
                         <th className="border border-slate-400 p-1 w-16">Target</th>
                         <th className="border border-slate-400 p-1 w-16">Realisasi</th>
@@ -1037,7 +1037,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
                       ))}
                       <tr className="bg-slate-100 font-bold font-sans">
                         <td colSpan={6} className="border border-slate-400 p-1 text-right">
-                          TOTAL SKOR KINERJA BPKP (PREDIKAT: {activeAssessment.kinerjaCategory}):
+                          TOTAL SKOR KINERJA SPIP (PREDIKAT: {activeAssessment.kinerjaCategory}):
                         </td>
                         <td className="border border-slate-400 p-1 text-center font-mono text-emerald-900">
                           {activeAssessment.kinerjaScore.toFixed(3)}
@@ -1072,7 +1072,7 @@ export const SelfAssessmentBPKPModule: React.FC = () => {
                 </h4>
                 <div className="whitespace-pre-line text-justify leading-relaxed bg-slate-50 p-2.5 rounded border border-slate-200">
                   {activeAssessment.aiStrategicRecommendations ||
-                    '1. Penguatan program penurunan kehilangan air (NRW) menuju target nasional.\n2. Peningkatan jam pelatihan dan kompetensi teknis pegawai.\n3. Monitoring berkelanjutan atas tindak lanjut rekomendasi audit SPI dan BPKP.'}
+                    '1. Penguatan program penurunan kehilangan air (NRW) menuju target nasional.\n2. Peningkatan jam pelatihan dan kompetensi teknis pegawai.\n3. Monitoring berkelanjutan atas tindak lanjut rekomendasi audit SPI dan Eksternal.'}
                 </div>
               </div>
             </div>

@@ -4,7 +4,10 @@ import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
 import firebaseConfig from '../../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+const customDbId = (firebaseConfig as { firestoreDatabaseId?: string }).firestoreDatabaseId;
+export const db = typeof customDbId === 'string' && customDbId.length > 0
+  ? getFirestore(app, customDbId)
+  : getFirestore(app);
 export const auth = getAuth(app);
 
 export enum OperationType {

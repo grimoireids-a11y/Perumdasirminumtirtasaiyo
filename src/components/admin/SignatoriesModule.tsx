@@ -19,10 +19,13 @@ import {
   Briefcase,
   Building,
   Search,
+  ShieldCheck,
+  Check,
 } from 'lucide-react';
 import { db } from '../../lib/firebase';
 import { OfficialSignatory } from '../../types/audit';
 import { INITIAL_OFFICIALS } from '../../data/initialData';
+import { DigitalSignaturePad } from '../common/DigitalSignaturePad';
 
 export const SignatoriesModule: React.FC = () => {
   const [officials, setOfficials] = useState<OfficialSignatory[]>([]);
@@ -30,11 +33,14 @@ export const SignatoriesModule: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  // Form states: 1. Nama, 2. NIP, 3. Jabatan
+  // Form states: 1. Nama, 2. NIP, 3. Jabatan, 4. TTD Digital
   const [formName, setFormName] = useState('');
   const [formNip, setFormNip] = useState('');
   const [formPosition, setFormPosition] = useState('');
   const [formDepartment, setFormDepartment] = useState('');
+  const [formSignatureUrl, setFormSignatureUrl] = useState<string>('');
+  const [formSignatureType, setFormSignatureType] = useState<'canvas' | 'upload' | 'qr' | undefined>(undefined);
+  const [formSignatureToken, setFormSignatureToken] = useState<string>('');
   const [notice, setNotice] = useState('');
 
   useEffect(() => {
@@ -53,6 +59,9 @@ export const SignatoriesModule: React.FC = () => {
     setFormNip('');
     setFormPosition('');
     setFormDepartment('Satuan Pengawasan Intern');
+    setFormSignatureUrl('');
+    setFormSignatureType(undefined);
+    setFormSignatureToken('');
     setIsFormOpen(true);
   };
 
@@ -62,6 +71,9 @@ export const SignatoriesModule: React.FC = () => {
     setFormNip(ofc.nip);
     setFormPosition(ofc.position);
     setFormDepartment(ofc.department || '');
+    setFormSignatureUrl(ofc.digitalSignatureUrl || '');
+    setFormSignatureType(ofc.signatureType);
+    setFormSignatureToken(ofc.signatureToken || '');
     setIsFormOpen(true);
   };
 
@@ -79,6 +91,10 @@ export const SignatoriesModule: React.FC = () => {
           nip: formNip.trim(),
           position: formPosition.trim(),
           department: formDepartment.trim(),
+          digitalSignatureUrl: formSignatureUrl || '',
+          signatureType: formSignatureType || null,
+          signatureToken: formSignatureToken || '',
+          signatureDate: formSignatureUrl ? new Date().toISOString() : '',
         });
         setNotice(`Jabatan "${formPosition}" berhasil diperbarui.`);
       } else {
@@ -91,6 +107,10 @@ export const SignatoriesModule: React.FC = () => {
           department: formDepartment.trim(),
           order: officials.length + 1,
           isActive: true,
+          digitalSignatureUrl: formSignatureUrl || '',
+          signatureType: formSignatureType,
+          signatureToken: formSignatureToken || '',
+          signatureDate: formSignatureUrl ? new Date().toISOString() : '',
         };
         await setDoc(doc(db, 'signatories', id), newOfc);
         setNotice(`Jabatan "${formPosition}" berhasil ditambahkan.`);
@@ -262,6 +282,26 @@ export const SignatoriesModule: React.FC = () => {
               </div>
             </div>
 
+            {/* KOMPONEN TANDA TANGAN DIGITAL PEJABAT */}
+            <div className="pt-2">
+              <DigitalSignaturePad
+                initialSignatureUrl={formSignatureUrl}
+                officialName={formName || 'Pejabat Penandatangan'}
+                officialNip={formNip}
+                officialPosition={formPosition || 'Pejabat Struktural'}
+                onSave={(dataUrl, type, token) => {
+                  setFormSignatureUrl(dataUrl);
+                  setFormSignatureType(type);
+                  setFormSignatureToken(token);
+                }}
+                onRemove={() => {
+                  setFormSignatureUrl('');
+                  setFormSignatureType(undefined);
+                  setFormSignatureToken('');
+                }}
+              />
+            </div>
+
             <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
               <button
                 type="button"
@@ -306,13 +346,14 @@ export const SignatoriesModule: React.FC = () => {
                 <th className="py-3 px-4">2. NIP Pegawai</th>
                 <th className="py-3 px-4">3. Jabatan Penandatangan</th>
                 <th className="py-3 px-4">Unit / Departemen</th>
+                <th className="py-3 px-4 text-center">Tanda Tangan Digital</th>
                 <th className="py-3 px-4 text-center w-24">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-slate-800">
               {filteredOfficials.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-slate-400">
+                  <td colSpan={7} className="py-8 text-center text-slate-400">
                     Tidak ditemukan data jabatan.
                   </td>
                 </tr>
@@ -329,11 +370,26 @@ export const SignatoriesModule: React.FC = () => {
                     </td>
                     <td className="py-3 px-4 text-slate-600">{ofc.department || '-'}</td>
                     <td className="py-3 px-4 text-center">
+                      {ofc.digitalSignatureUrl ? (
+                        <div className="inline-flex items-center gap-1.5 px-2 py-1 bg-emerald-50 border border-emerald-200 rounded-lg text-[10px] font-bold text-emerald-800">
+                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <span>TTD Digital Aktif</span>
+                          {ofc.signatureType && (
+                            <span className="uppercase text-[9px] text-emerald-600 font-mono">
+                              ({ofc.signatureType})
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-slate-400 italic">Belum Ada TTD</span>
+                      )}
+                    </td>
+                    <td className="py-3 px-4 text-center">
                       <div className="flex items-center justify-center gap-1">
                         <button
                           onClick={() => openEditForm(ofc)}
                           className="p-1.5 text-slate-500 hover:text-emerald-700 hover:bg-slate-100 rounded-md transition-colors"
-                          title="Ubah Jabatan"
+                          title="Ubah Jabatan & TTD"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>

@@ -62,7 +62,7 @@ export const INITIAL_BPKP_KINERJA_INDICATORS: BPKPIndicatorAssessment[] = [
     score: 5,
     weightedScore: 0.275,
     evidenceRef: 'Laporan Rekonsiliasi DRD dan Penerimaan Kasir/Bank',
-    notes: 'Efektivitas penagihan melampaui target standar BPKP (> 90%).',
+    notes: 'Efektivitas penagihan melampaui target standar (> 90%).',
   },
   {
     id: 'ind-k5',
@@ -154,7 +154,7 @@ export const INITIAL_BPKP_KINERJA_INDICATORS: BPKPIndicatorAssessment[] = [
     score: 5,
     weightedScore: 0.25,
     evidenceRef: 'Laporan Penjualan Air Berdasarkan Golongan Tarif',
-    notes: 'Konsumsi air dalam rentang wajar standar BPKP (15 - 20 m³/bulan).',
+    notes: 'Konsumsi air dalam rentang wajar standar (15 - 20 m³/bulan).',
   },
 
   // 3. ASPEK OPERASIONAL (Bobot 35%)
@@ -185,8 +185,8 @@ export const INITIAL_BPKP_KINERJA_INDICATORS: BPKPIndicatorAssessment[] = [
     unitMeasurement: '%',
     score: 3,
     weightedScore: 0.21,
-    evidenceRef: 'Laporan Neraca Air (Water Balance) BPKP & Data Meter Induk DMA',
-    notes: 'Masih berada sedikit di atas toleransi standar nasional BPKP (≤ 25%). Diperlukan langkah mitigasi DMA.',
+    evidenceRef: 'Laporan Neraca Air (Water Balance) & Data Meter Induk DMA',
+    notes: 'Masih berada sedikit di atas toleransi standar nasional (≤ 25%). Diperlukan langkah mitigasi DMA.',
   },
   {
     id: 'ind-o3',
@@ -216,7 +216,7 @@ export const INITIAL_BPKP_KINERJA_INDICATORS: BPKPIndicatorAssessment[] = [
     score: 5,
     weightedScore: 0.35,
     evidenceRef: 'Peta Kontur & Laporan Manometer Tekanan Jaringan Distribusi',
-    notes: 'Tekanan air di ujung sambungan pelanggan memenuhi standar minimum BPKP.',
+    notes: 'Tekanan air di ujung sambungan pelanggan memenuhi standar minimum.',
   },
   {
     id: 'ind-o5',
@@ -248,7 +248,7 @@ export const INITIAL_BPKP_KINERJA_INDICATORS: BPKPIndicatorAssessment[] = [
     score: 5,
     weightedScore: 0.25,
     evidenceRef: 'Daftar Nominatif Pegawai & Rekapitulasi Pelanggan Aktif',
-    notes: 'Sangat efisien (di bawah rasio maksimum BPKP 6.0 per 1.000 pelanggan).',
+    notes: 'Sangat efisien (di bawah rasio maksimum 6.0 per 1.000 pelanggan).',
   },
   {
     id: 'ind-s2',
@@ -263,7 +263,7 @@ export const INITIAL_BPKP_KINERJA_INDICATORS: BPKPIndicatorAssessment[] = [
     score: 5,
     weightedScore: 0.25,
     evidenceRef: 'Sertifikat Pelatihan & Jam Pelatihan Pegawai Bagian Kepegawaian',
-    notes: 'Pegawai rutin diikutsertakan pada bimtek BPKP, Perpamsi, dan sertifikasi profesi.',
+    notes: 'Pegawai rutin diikutsertakan pada bimtek, Perpamsi, dan sertifikasi profesi.',
   },
   {
     id: 'ind-s3',
@@ -518,7 +518,7 @@ export const INITIAL_SPIP_ELEMENTS: SPIPElementAssessment[] = [
     elementName: 'Pemantauan Pengendalian Intern',
     subElementCode: '5.3',
     subElementName: 'Penyelesaian dan Tindak Lanjut Rekomendasi Hasil Audit',
-    bpkpCriteria: 'Pemantauan persentase penyelesaian rekomendasi SPI, BPKP, dan KAP dengan target tindak lanjut > 85%.',
+    bpkpCriteria: 'Pemantauan persentase penyelesaian rekomendasi SPI dan audit eksternal dengan target tindak lanjut > 85%.',
     selfRating: 4,
     evidenceRef: 'Matriks Pemantauan Tindak Lanjut Rekomendasi (TLR) & Berita Acara Rekonsiliasi',
     improvementPlan: 'Rapat koordinasi percepatan penyelesaian rekomendasi yang berstatus dalam proses.',
@@ -526,8 +526,8 @@ export const INITIAL_SPIP_ELEMENTS: SPIPElementAssessment[] = [
 ];
 
 // ============================================================
-// STANDAR MANAJEMEN RISIKO BPKP PERUMDA AIR MINUM (ISO 31000)
-// Berdasarkan Paparan Evaluasi Manajemen Risiko oleh BPKP Perwakilan Sumbar
+// STANDAR MANAJEMEN RISIKO SPIP PERUMDA AIR MINUM (ISO 31000)
+// Berdasarkan Pedoman Evaluasi Manajemen Risiko & SPIP Terpadu
 // ============================================================
 
 export interface BpkpRiskCategory {

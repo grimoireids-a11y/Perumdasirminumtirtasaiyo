@@ -106,7 +106,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             { id: 'risk_universe', label: 'Risk Universe', icon: Building2 },
             { id: 'risk_register', label: 'Register Risiko 5x5', icon: AlertTriangle },
             { id: 'rcsa', label: 'Penilaian RCSA Unit', icon: ClipboardList },
-            { id: 'bpkp_assessment', label: 'Self Assessment BPKP', icon: Award },
+            { id: 'bpkp_assessment', label: 'Self Assessment SPIP', icon: Award },
             { id: 'pkpt', label: 'Penyusunan PKPT', icon: CalendarCheck },
             { id: 'spi_programs', label: 'Program Tahunan SPI', icon: BookOpen },
           ],
@@ -179,6 +179,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
           title: 'Manajemen Risiko Korporat',
           items: [
             { id: 'risk_register', label: 'Register Risiko Korporat (5x5)', icon: AlertTriangle },
+          ],
+        },
+        {
+          title: 'Pemantauan & Tindak Lanjut',
+          items: [
+            { id: 'follow_ups', label: 'Tindak Lanjut Rekomendasi (Unit Kerja)', icon: FileCheck2 },
           ],
         },
       ];

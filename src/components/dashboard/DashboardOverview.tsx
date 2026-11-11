@@ -150,7 +150,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     heatmapGrid[`${l}-${i}`] = (heatmapGrid[`${l}-${i}`] || 0) + 1;
   });
 
-  // BPKP 5-Level Risk Classification Helper
+  // SPIP 5-Level Risk Classification Helper
   const getBpkpLevel = (score: number) => {
     if (score >= 20) {
       return {
@@ -211,7 +211,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     return getBpkpLevel(score).color;
   };
 
-  // Counts for the 5 BPKP Risk Levels
+  // Counts for the 5 SPIP Risk Levels
   const sangatTinggiCount = filteredRisks.filter((r) => {
     const l = Math.min(5, Math.max(1, r.residualLikelihood || r.likelihood || 1));
     const i = Math.min(5, Math.max(1, r.residualImpact || r.impact || 1));
@@ -283,7 +283,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-1">
-              Perumda Air Minum Tirta Saiyo Kabupaten Pasaman · Pemetaan sebaran risiko residual berstandar BPKP
+              Perumda Air Minum Tirta Saiyo Kabupaten Pasaman · Pemetaan sebaran risiko residual berstandar SPIP
             </p>
           </div>
 
@@ -338,7 +338,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           </div>
         </div>
 
-        {/* 5-Level BPKP Risk Profile Summary Cards */}
+        {/* 5-Level SPIP Risk Profile Summary Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           <div
             onClick={() => {
@@ -568,9 +568,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 })}
               </div>
 
-              {/* Legend BPKP */}
+              {/* Legend Matriks Risiko */}
               <div className="flex flex-wrap items-center justify-center gap-4 pt-4 text-xs font-semibold text-slate-700 border-t border-slate-100">
-                <span className="text-slate-400 font-normal">Keterangan Selera Risiko BPKP:</span>
+                <span className="text-slate-400 font-normal">Keterangan Selera Risiko Pengawasan:</span>
                 <span className="flex items-center gap-1.5">
                   <span className="w-3.5 h-3.5 rounded-sm bg-rose-600"></span> Sangat Tinggi (20–25)
                 </span>
@@ -636,7 +636,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
                     <th className="py-2.5 px-3">Kode & Judul Risiko</th>
                     <th className="py-2.5 px-3">Unit Kerja</th>
-                    <th className="py-2.5 px-3">Kategori BPKP</th>
+                    <th className="py-2.5 px-3">Kategori Risiko</th>
                     <th className="py-2.5 px-3 text-center">L × D</th>
                     <th className="py-2.5 px-3 text-center">Skor & Level</th>
                     <th className="py-2.5 px-3">Rencana Pengendalian</th>
@@ -699,10 +699,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               Kebijakan Akses Pengawasan SPI SMART · Perumda Air Minum Tirta Saiyo Pasaman
             </p>
             <p className="text-emerald-800 text-[11px]">
-              Berdasarkan pedoman tata kelola pengawasan intern berstandar BPKP, role Anda memiliki akses resmi pada
-              <strong> Peta Risiko Korporat (5x5 Heat Map)</strong> dan <strong>Register Risiko Korporat</strong>.
-              Seluruh modul perencanaan audit (PKPT), pelaksanaan pemeriksaan (PKA, KKA, LHA), temuan klausul 5C, tindak
-              lanjut rekomendasi, serta pengaturan tata kelola sistem dibatasi khusus untuk Kepala SPI dan Administrator Sistem.
+              Berdasarkan pedoman tata kelola pengawasan intern berbasis risiko, akun Anda memiliki akses resmi pada
+              <strong> Peta Risiko Korporat (5x5 Heat Map)</strong>, <strong>Register Risiko Korporat</strong>, dan{' '}
+              <strong>Tindak Lanjut Rekomendasi Unit Kerja</strong> untuk memantau serta melaporkan bukti aksi perbaikan.
+              Modul perencanaan audit internal (PKPT), pelaksanaan pemeriksaan (PKA, KKA, LHA), serta pengaturan sistem dibatasi khusus untuk Kepala SPI dan Tim Pemeriksa.
             </p>
           </div>
         </div>
@@ -788,10 +788,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           <button
             onClick={() => onNavigateTo('bpkp_assessment')}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-emerald-950 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 rounded-lg shadow-2xs transition-colors cursor-pointer"
-            title="Self Assessment Kinerja BUMD Air Minum & Maturitas SPIP Standar BPKP"
+            title="Self Assessment Kinerja BUMD Air Minum & Maturitas SPIP Terpadu"
           >
             <Award className="w-3.5 h-3.5 text-emerald-800" />
-            <span>Self Assessment BPKP</span>
+            <span>Self Assessment SPIP</span>
           </button>
 
           <button
@@ -1075,7 +1075,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               ))}
             </div>
 
-            {/* Legend BPKP */}
+            {/* Legend SPIP */}
             <div className="flex flex-wrap items-center justify-center gap-3 pt-2 text-[11px] text-slate-600 font-medium">
               <span className="flex items-center gap-1.5">
                 <span className="w-3 h-3 rounded-xs bg-emerald-500"></span> Sangat Rendah (1-2)
