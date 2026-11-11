@@ -1,0 +1,319 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with RBAC role and unit association",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 128 },
+        "displayName": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "enum": ["KEPALA_SPI", "AUDITOR", "DIREKTUR", "DEWAN_PENGAWAS", "AUDITEE", "ADMIN_SISTEM"] },
+        "unitId": { "type": "string", "maxLength": 64 },
+        "unitName": { "type": "string", "maxLength": 128 },
+        "nip": { "type": "string", "maxLength": 64 },
+        "phone": { "type": "string", "maxLength": 32 },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["uid", "email", "displayName", "role", "isActive"]
+    },
+    "Unit": {
+      "title": "Unit",
+      "description": "Organizational unit or branch service unit of Perumda Tirta Saiyo",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 128 },
+        "code": { "type": "string", "maxLength": 32 },
+        "category": { "type": "string", "enum": ["PIMPINAN", "PENGAWASAN", "BIDANG", "UNIT_PELAYANAN"] },
+        "headName": { "type": "string", "maxLength": 128 },
+        "location": { "type": "string", "maxLength": 128 },
+        "isActive": { "type": "boolean" }
+      },
+      "required": ["id", "name", "category", "isActive"]
+    },
+    "RiskRegister": {
+      "title": "RiskRegister",
+      "description": "Risk register entry with 5x5 matrix calculations and mitigation plans",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "code": { "type": "string", "maxLength": 32 },
+        "year": { "type": "number" },
+        "unitId": { "type": "string", "maxLength": 64 },
+        "unitName": { "type": "string", "maxLength": 128 },
+        "businessProcess": { "type": "string", "maxLength": 128 },
+        "category": { "type": "string", "maxLength": 64 },
+        "cause": { "type": "string", "maxLength": 1000 },
+        "event": { "type": "string", "maxLength": 1000 },
+        "impactDesc": { "type": "string", "maxLength": 1000 },
+        "existingControl": { "type": "string", "maxLength": 1000 },
+        "likelihood": { "type": "number" },
+        "impact": { "type": "number" },
+        "inherentScore": { "type": "number" },
+        "inherentLevel": { "type": "string", "enum": ["Rendah", "Sedang", "Tinggi", "Ekstrem"] },
+        "controlEffectiveness": { "type": "string", "enum": ["Efektif", "Sebagian Efektif", "Tidak Efektif"] },
+        "residualLikelihood": { "type": "number" },
+        "residualImpact": { "type": "number" },
+        "residualScore": { "type": "number" },
+        "residualLevel": { "type": "string", "enum": ["Rendah", "Sedang", "Tinggi", "Ekstrem"] },
+        "mitigationPlan": { "type": "string", "maxLength": 2000 },
+        "pic": { "type": "string", "maxLength": 128 },
+        "targetDate": { "type": "string", "maxLength": 32 },
+        "status": { "type": "string", "enum": ["Identifikasi", "Mitigasi", "Selesai"] },
+        "createdBy": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "code", "year", "unitId", "businessProcess", "inherentScore", "residualScore"]
+    },
+    "PKPT": {
+      "title": "PKPT",
+      "description": "Risk-based annual internal audit work plan item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "year": { "type": "number" },
+        "title": { "type": "string", "maxLength": 256 },
+        "unitId": { "type": "string", "maxLength": 64 },
+        "unitName": { "type": "string", "maxLength": 128 },
+        "businessProcess": { "type": "string", "maxLength": 128 },
+        "riskScore": { "type": "number" },
+        "priorityScore": { "type": "number" },
+        "priorityRank": { "type": "string", "maxLength": 32 },
+        "auditType": { "type": "string", "maxLength": 64 },
+        "objective": { "type": "string", "maxLength": 1000 },
+        "scope": { "type": "string", "maxLength": 1000 },
+        "estimatedDays": { "type": "number" },
+        "quarter": { "type": "string", "enum": ["Q1", "Q2", "Q3", "Q4"] },
+        "status": { "type": "string", "enum": ["Rencana", "Berlangsung", "Selesai"] },
+        "approvalStatus": { "type": "string", "enum": ["Draft", "Disetujui", "Ditolak"] },
+        "approvedBy": { "type": "string", "maxLength": 128 },
+        "approvedAt": { "type": "string", "maxLength": 64 },
+        "manualOverrideReason": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["id", "year", "title", "unitId", "auditType", "status"]
+    },
+    "SPIProgram": {
+      "title": "SPIProgram",
+      "description": "Non-audit annual SPI work program item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "year": { "type": "number" },
+        "activityName": { "type": "string", "maxLength": 256 },
+        "target": { "type": "string", "maxLength": 500 },
+        "schedule": { "type": "string", "maxLength": 128 },
+        "pic": { "type": "string", "maxLength": 128 },
+        "budget": { "type": "number" },
+        "kpi": { "type": "string", "maxLength": 500 },
+        "realization": { "type": "string", "maxLength": 1000 },
+        "status": { "type": "string", "enum": ["Belum Dimulai", "Dalam Proses", "Terealisasi"] }
+      },
+      "required": ["id", "year", "activityName", "status"]
+    },
+    "AuditAssignment": {
+      "title": "AuditAssignment",
+      "description": "Official audit assignment letter and team assignment",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "letterNumber": { "type": "string", "maxLength": 128 },
+        "letterDate": { "type": "string", "maxLength": 32 },
+        "basis": { "type": "string", "maxLength": 500 },
+        "objectName": { "type": "string", "maxLength": 256 },
+        "unitId": { "type": "string", "maxLength": 64 },
+        "unitName": { "type": "string", "maxLength": 128 },
+        "auditType": { "type": "string", "maxLength": 64 },
+        "supervisor": { "type": "string", "maxLength": 128 },
+        "teamLeader": { "type": "string", "maxLength": 128 },
+        "teamMembers": { "type": "string", "maxLength": 500 },
+        "objective": { "type": "string", "maxLength": 1000 },
+        "scope": { "type": "string", "maxLength": 1000 },
+        "startDate": { "type": "string", "maxLength": 32 },
+        "endDate": { "type": "string", "maxLength": 32 },
+        "status": { "type": "string", "enum": ["Diterbitkan", "Berlangsung", "Selesai"] }
+      },
+      "required": ["id", "letterNumber", "letterDate", "unitId", "status"]
+    },
+    "WorkPaper": {
+      "title": "WorkPaper",
+      "description": "Kertas Kerja Audit (KKA) with review trail and locking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "assignmentId": { "type": "string", "maxLength": 64 },
+        "kkaNumber": { "type": "string", "maxLength": 64 },
+        "title": { "type": "string", "maxLength": 256 },
+        "auditProgramRef": { "type": "string", "maxLength": 64 },
+        "objective": { "type": "string", "maxLength": 1000 },
+        "auditBasis": { "type": "string", "maxLength": 500 },
+        "procedure": { "type": "string", "maxLength": 2000 },
+        "testedData": { "type": "string", "maxLength": 2000 },
+        "sampleSize": { "type": "string", "maxLength": 256 },
+        "testResult": { "type": "string", "maxLength": 2000 },
+        "evidenceRef": { "type": "string", "maxLength": 500 },
+        "analysis": { "type": "string", "maxLength": 2000 },
+        "conclusion": { "type": "string", "maxLength": 1000 },
+        "crossRefs": { "type": "string", "maxLength": 256 },
+        "preparer": { "type": "string", "maxLength": 128 },
+        "reviewer": { "type": "string", "maxLength": 128 },
+        "status": { "type": "string", "enum": ["Draft", "Submitted", "Reviewed", "Approved"] },
+        "isLocked": { "type": "boolean" },
+        "reviewerNotes": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["id", "assignmentId", "kkaNumber", "title", "status", "isLocked"]
+    },
+    "Finding": {
+      "title": "Finding",
+      "description": "Audit finding structured according to the 5C framework",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "findingNumber": { "type": "string", "maxLength": 64 },
+        "year": { "type": "number" },
+        "assignmentId": { "type": "string", "maxLength": 64 },
+        "unitId": { "type": "string", "maxLength": 64 },
+        "unitName": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 256 },
+        "category": { "type": "string", "maxLength": 64 },
+        "riskLevel": { "type": "string", "enum": ["Rendah", "Sedang", "Tinggi", "Kritis"] },
+        "condition": { "type": "string", "maxLength": 3000 },
+        "criteria": { "type": "string", "maxLength": 3000 },
+        "cause": { "type": "string", "maxLength": 3000 },
+        "consequence": { "type": "string", "maxLength": 3000 },
+        "potentialLoss": { "type": "number" },
+        "auditorAnalysis": { "type": "string", "maxLength": 3000 },
+        "auditeeResponse": { "type": "string", "maxLength": 3000 },
+        "status": { "type": "string", "enum": ["Draft", "Disetujui", "Tindak Lanjut", "Selesai"] }
+      },
+      "required": ["id", "findingNumber", "year", "unitId", "title", "riskLevel", "status"]
+    },
+    "Recommendation": {
+      "title": "Recommendation",
+      "description": "Auditor corrective action recommendation for a finding",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "findingId": { "type": "string", "maxLength": 64 },
+        "recNumber": { "type": "string", "maxLength": 32 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "pic": { "type": "string", "maxLength": 128 },
+        "targetDate": { "type": "string", "maxLength": 32 },
+        "successIndicator": { "type": "string", "maxLength": 500 },
+        "status": { "type": "string", "enum": ["Belum Ditindaklanjuti", "Dalam Proses", "Menunggu Verifikasi", "Selesai", "Tidak Dapat Ditindaklanjuti"] }
+      },
+      "required": ["id", "findingId", "recNumber", "description", "pic", "status"]
+    },
+    "FollowUp": {
+      "title": "FollowUp",
+      "description": "Auditee follow-up action plan and auditor verification trail",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "recommendationId": { "type": "string", "maxLength": 64 },
+        "unitId": { "type": "string", "maxLength": 64 },
+        "responseNotes": { "type": "string", "maxLength": 2000 },
+        "evidenceFileName": { "type": "string", "maxLength": 256 },
+        "evidenceFileUrl": { "type": "string", "maxLength": 500 },
+        "submittedBy": { "type": "string", "maxLength": 128 },
+        "submittedAt": { "type": "string", "maxLength": 64 },
+        "verificationNotes": { "type": "string", "maxLength": 2000 },
+        "verifier": { "type": "string", "maxLength": 128 },
+        "verifiedAt": { "type": "string", "maxLength": 64 },
+        "status": { "type": "string", "enum": ["Diajukan", "Disetujui", "Ditolak"] }
+      },
+      "required": ["id", "recommendationId", "unitId", "status"]
+    },
+    "Investigation": {
+      "title": "Investigation",
+      "description": "Confidential fraud or irregularities investigation case",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "caseNumber": { "type": "string", "maxLength": 64 },
+        "title": { "type": "string", "maxLength": 256 },
+        "source": { "type": "string", "maxLength": 128 },
+        "receiptDate": { "type": "string", "maxLength": 32 },
+        "unitId": { "type": "string", "maxLength": 64 },
+        "unitName": { "type": "string", "maxLength": 128 },
+        "suspectedModus": { "type": "string", "maxLength": 2000 },
+        "estimatedLoss": { "type": "number" },
+        "riskLevel": { "type": "string", "enum": ["Sedang", "Tinggi", "Kritis"] },
+        "chronology": { "type": "string", "maxLength": 4000 },
+        "initialAnalysis": { "type": "string", "maxLength": 2000 },
+        "decision": { "type": "string", "maxLength": 1000 },
+        "status": { "type": "string", "enum": ["Registrasi", "Penelaahan", "Audit Investigatif", "Laporan Akhir", "Selesai"] },
+        "isConfidential": { "type": "boolean" },
+        "leadInvestigator": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "caseNumber", "title", "unitId", "status", "isConfidential"]
+    },
+    "Regulation": {
+      "title": "Regulation",
+      "description": "Corporate compliance legal and policy reference database",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "title": { "type": "string", "maxLength": 256 },
+        "regNumber": { "type": "string", "maxLength": 128 },
+        "year": { "type": "number" },
+        "category": { "type": "string", "enum": ["UU/PP/Permen", "Perdir", "SOP", "SK Direksi", "Standar Audit", "Perjanjian/Kontrak"] },
+        "about": { "type": "string", "maxLength": 1000 },
+        "riskArticles": { "type": "string", "maxLength": 2000 },
+        "recommendation": { "type": "string", "maxLength": 2000 },
+        "status": { "type": "string", "enum": ["Berlaku", "Dalam Review", "Dicabut"] }
+      },
+      "required": ["id", "title", "regNumber", "category", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile with role authorization"
+    },
+    "/units/{unitId}": {
+      "schema": "Unit",
+      "description": "Departments and service branch units"
+    },
+    "/risk_registers/{riskId}": {
+      "schema": "RiskRegister",
+      "description": "Corporate 5x5 risk register and mitigations"
+    },
+    "/pkpt/{pkptId}": {
+      "schema": "PKPT",
+      "description": "Annual risk-based internal audit plans"
+    },
+    "/spi_programs/{programId}": {
+      "schema": "SPIProgram",
+      "description": "Non-audit SPI internal capability programs"
+    },
+    "/audit_assignments/{assignmentId}": {
+      "schema": "AuditAssignment",
+      "description": "Audit assignments and letters"
+    },
+    "/work_papers/{kkaId}": {
+      "schema": "WorkPaper",
+      "description": "Audit work papers (KKA)"
+    },
+    "/findings/{findingId}": {
+      "schema": "Finding",
+      "description": "5C internal audit findings"
+    },
+    "/recommendations/{recId}": {
+      "schema": "Recommendation",
+      "description": "Audit corrective recommendations"
+    },
+    "/follow_ups/{followUpId}": {
+      "schema": "FollowUp",
+      "description": "Auditee responses and verification records"
+    },
+    "/investigations/{caseId}": {
+      "schema": "Investigation",
+      "description": "Confidential fraud investigations"
+    },
+    "/regulations/{regId}": {
+      "schema": "Regulation",
+      "description": "BUMD regulations and compliance reviews"
+    }
+  }
+}

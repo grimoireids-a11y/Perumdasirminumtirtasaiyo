@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Default: allow read and write for all application collections
+    // This supports both custom BUMD authentication (superman / credentials) and Google Auth
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    match /units/{unitId} {
+      allow read, write: if true;
+    }
+
+    match /risk_registers/{riskId} {
+      allow read, write: if true;
+    }
+
+    match /pkpt/{pkptId} {
+      allow read, write: if true;
+    }
+
+    match /spi_programs/{programId} {
+      allow read, write: if true;
+    }
+
+    match /audit_assignments/{assignmentId} {
+      allow read, write: if true;
+    }
+
+    match /audit_programs/{programId} {
+      allow read, write: if true;
+    }
+
+    match /work_papers/{kkaId} {
+      allow read, write: if true;
+    }
+
+    match /findings/{findingId} {
+      allow read, write: if true;
+    }
+
+    match /recommendations/{recId} {
+      allow read, write: if true;
+    }
+
+    match /follow_ups/{followUpId} {
+      allow read, write: if true;
+    }
+
+    match /investigations/{caseId} {
+      allow read, write: if true;
+    }
+
+    match /regulations/{regId} {
+      allow read, write: if true;
+    }
+
+    match /signatories/{signatoryId} {
+      allow read, write: if true;
+    }
+
+    match /audit_reports/{reportId} {
+      allow read, write: if true;
+    }
+
+    match /bpkp_assessments/{assessmentId} {
+      allow read, write: if true;
+    }
+
+    // Catch-all
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

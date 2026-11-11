@@ -1,0 +1,8 @@
+{
+  "name": "SPI SMART - Perumda Air Minum Tirta Saiyo",
+  "description": "Sistem Informasi Pengawasan Intern Berbasis Risiko Terpadu Perumda Air Minum Tirta Saiyo Kabupaten Pasaman",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
